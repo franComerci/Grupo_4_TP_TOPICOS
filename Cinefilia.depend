@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1778084014 source:c:\users\admin\desktop\topicos\cinefilia\main.c
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+
+1778083788 source:c:\users\admin\desktop\topicos\cinefilia\cinefiliafunctions.c
+	"cinefiliaHeader.h"
+
+1778083562 c:\users\admin\desktop\topicos\cinefilia\cinefiliaheader.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
