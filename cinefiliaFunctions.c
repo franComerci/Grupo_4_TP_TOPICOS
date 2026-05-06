@@ -76,3 +76,48 @@ char *crearCuil(long dni, char sexo)
 
     return cuil;
 }
+
+bool validarCorreo(char *correo) // revisar
+{
+    int cantArrob = 0, cantPto = 0;
+    char *posArrob = NULL; //para cuando encuentro la @ del mail
+    while(*correo != '\0')
+    {
+        if(!isalnum(*correo))
+            if(*correo != '.' && *correo != '@')
+                return false;
+        //@ unico
+        if(*correo == '@')
+        {
+            cantArrob++;
+            posArrob = correo;
+        }
+
+        //no puede haber un . justo despues del @
+        if(*correo == '.' && cantArrob == 1)
+        {
+            if(correo == (posArrob + 1))
+                return false;
+            cantPto++; // ptos despues de la @
+        }
+        correo++;
+    }
+
+    if( cantArrob != 1 || cantPto > 2 || cantPto == 0 )
+        return false;
+
+    return true;
+}
+
+bool validarDni(long dni)
+{
+    return dni >= 1000000 && dni<= 1000000000 ? true : false;
+}
+
+bool validarSexo(char sexo)
+{
+    return sexo == 'M' || sexo == 'F' ? true : false;
+}
+
+
+
