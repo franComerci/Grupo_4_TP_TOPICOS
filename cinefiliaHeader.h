@@ -19,6 +19,12 @@
 #define SIN_PUNTO -10
 #define SEXONT -11
 #define DNI_FUER_RANG -12
+#define TAMCUIL 14
+#define TAMCAT 10
+#define TAMPLAN 10
+#define MAIL 30
+#define REG 150
+
 ///Macros
 #define miToLower(c) ( ((c) >= 'A' && (c) <= 'Z') ? ((c) + ('a' - 'A') ): (c) )
 #define miToUpper(c) ( ((c) >= 'a' && (c) <= 'z') ? ((c) - ('a' - 'A') ): (c) )
@@ -28,6 +34,20 @@ typedef struct{
     int d, m, a;
 }t_fecha;
 
+typedef struct{
+    long dni;
+    char cuil[TAMCUIL];
+    char nya[NOMYAPELARGO];
+    t_fecha fnac;
+    char sexo;
+    char categoria[TAMCAT];
+    t_fecha fechaAfiliacion;
+    t_fecha ultimaCuota;
+    char estado;
+    char plan[TAMPLAN];
+    char emailTutor[MAIL];
+}t_miembros;
+
 char *crearCuil(long dni, char sexo);
 int calcularDigito(int *tipo, long dni);
 void normalizar(char *nomyape);
@@ -36,4 +56,6 @@ void mostrarErrorCorreo(int codigo);
 int validarDni(long dni);
 int validarSexo(char sexo);
 char *normalizarNombre(char *nya);
+void leerArchivo(FILE* archivo);
+void trozado(char linea, t_miembros m)
 #endif // CINEFILIAHEADER_H_INCLUDED

@@ -18,5 +18,18 @@ int main()
     char nya[60] = "    galleTa   pePE , raul";
     printf("Resultado: '%s'\n", normalizarNombre(nya));
 
+    FILE *arch;
+
+    if(arch = fopen("miembros.dat","r") == NULL)
+    {
+        puts("Error al abrir el archivo");
+        getch();
+        exit(1);
+    }
+
+    leerArchivo(arch);
+
+    fclose (arch);
+
     return 0;
 }
