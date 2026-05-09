@@ -7,12 +7,16 @@ int main()
 
     printf("cuil: %s\n", resultado);
 
-    char correojoder[] = "a@ar.a.";
+    char correojoder[] = " a@a r.a";
 
     int corrval = validarCorreo(correojoder);
 
     mostrarErrorCorreo(corrval);
 
     free(resultado);
+
+    char nya[60] = "    galleTa   pePE , raul";
+    printf("Resultado: '%s'\n", normalizarNombre(nya));
+
     return 0;
 }

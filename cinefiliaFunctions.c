@@ -58,6 +58,7 @@ char *crearCuil(long dni, char sexo)
 {
     //con los guiones el cuil queda en 14 caracteres
     char *cuil = (char*)malloc(14*sizeof(char));
+//    char cuil[14];
     if(cuil == NULL)
         return NULL;
     int tipo;
@@ -86,7 +87,7 @@ int validarCorreo(char *correo)
         return NADA_ANTES_ARR;
     while(*correo != '\0')
     {
-        if(!isalnum(*correo))
+        if(!esAlpha(*correo))
             if(*correo != '.' && *correo != '@')
                 return VALOR_INC;
         if(*correo == '@')
@@ -146,4 +147,56 @@ void mostrarErrorCorreo(int codigo)
         case MAS_DOS_PUNT:    puts("Error: hay mas de dos puntos en el dominio.");break;
         case SIN_PUNTO:       puts("Error: no hay punto en el dominio.");break;
     }
+}
+
+char *normalizarNombre(char *nya)
+{
+    if(nya == NULL)
+        return NULL;
+
+    char *read = nya;
+    char *write = nya;
+
+    while(*read != '\0' && !esLetra(*read)) //le agrego el \0 porque con una cadena vacia se rompe
+        read++;
+
+    ///primero voy a sacar todo lo que no sea letra
+    while(*read != '\0')
+    {
+        *write = miToUpper(*read); //primer letra
+        write++;
+        read++;
+        while(*read != '\0' && esLetra(*read))//resto del nombre
+        {
+            *write = miToLower(*read);
+            write++;
+            read++;
+        }
+        while(*read != '\0' && !esLetra(*read)) //no le doy bola a la basura ni a los espacios
+            read++;
+
+        if(*read != '\0')
+        {
+            *write = ' ';
+            write++;
+        }
+
+        *write = '\0'; //llego al fin, solamente con nombres y apellido, sin basura,
+    }
+    char *ptr_espacio = nya;
+
+    while(*ptr_espacio != ' ' && *ptr_espacio != '\0')
+    {
+        ptr_espacio++;
+    }
+
+    if(*ptr_espacio == ' ')
+    {
+        size_t mover = strlen(ptr_espacio) + 1;
+        memmove(ptr_espacio + 1, ptr_espacio, mover);
+
+        *ptr_espacio = ',';
+    }
+
+    return nya;
 }
