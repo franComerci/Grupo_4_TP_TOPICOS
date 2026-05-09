@@ -7,6 +7,12 @@ int main()
 
     printf("cuil: %s\n", resultado);
 
+    char correojoder[] = "a@ar.a.";
+
+    int corrval = validarCorreo(correojoder);
+
+    mostrarErrorCorreo(corrval);
+
     free(resultado);
     return 0;
 }

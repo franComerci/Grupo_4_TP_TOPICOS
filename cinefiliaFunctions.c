@@ -77,47 +77,73 @@ char *crearCuil(long dni, char sexo)
     return cuil;
 }
 
-bool validarCorreo(char *correo) // revisar
+int validarCorreo(char *correo)
 {
     int cantArrob = 0, cantPto = 0;
-    char *posArrob = NULL; //para cuando encuentro la @ del mail
+    char *posArrob = NULL;
+    char *posPunt = NULL;
+    if(*correo == '@')
+        return NADA_ANTES_ARR;
     while(*correo != '\0')
     {
         if(!isalnum(*correo))
             if(*correo != '.' && *correo != '@')
-                return false;
-        //@ unico
+                return VALOR_INC;
         if(*correo == '@')
         {
             cantArrob++;
             posArrob = correo;
         }
-
-        //no puede haber un . justo despues del @
+        if(*correo == '.' && cantArrob == 0)
+            return PUNT_ANT_ARROB;
         if(*correo == '.' && cantArrob == 1)
         {
             if(correo == (posArrob + 1))
-                return false;
-            cantPto++; // ptos despues de la @
+                return PUNTO_DESP_ARR;
+            if(cantPto >= 1 && correo == (posPunt + 1))
+                return DOS_PUNT_SEG;
+            cantPto++;
+            posPunt = correo;
         }
         correo++;
     }
-
-    if( cantArrob != 1 || cantPto > 2 || cantPto == 0 )
-        return false;
-
-    return true;
+    if(*(correo-1) == '.')
+        return PUNTO_FINAL;
+    if(cantArrob == 0)
+        return SIN_ARR;
+    if(cantArrob > 1)
+        return MAS_UN_ARR;
+    if(cantPto > 2)
+        return MAS_DOS_PUNT;
+    if(cantPto == 0)
+        return SIN_PUNTO;
+    return EXITO;
 }
 
-bool validarDni(long dni)
+int validarDni(long dni)
 {
-    return dni >= 1000000 && dni<= 1000000000 ? true : false;
+    return dni >= 1000000 && dni<= 1000000000 ? EXITO : DNI_FUER_RANG;
 }
 
-bool validarSexo(char sexo)
+int validarSexo(char sexo)
 {
-    return sexo == 'M' || sexo == 'F' ? true : false;
+    return sexo == 'M' || sexo == 'F' ? EXITO : SEXONT;
 }
 
-
-
+void mostrarErrorCorreo(int codigo)
+{
+    switch(codigo)
+    {
+        case EXITO:           puts("Correo valido.");break;
+        case NADA_ANTES_ARR:  puts("Error: no hay caracteres antes del @.");break;
+        case VALOR_INC:       puts("Error: caracter invalido en el correo.");break;
+        case PUNT_ANT_ARROB:  puts("Error: hay un punto antes del @.");break;
+        case PUNTO_DESP_ARR:  puts("Error: hay un punto justo despues del @.");break;
+        case DOS_PUNT_SEG:    puts("Error: hay dos puntos seguidos en el dominio.");break;
+        case PUNTO_FINAL:     puts("Error: el correo termina con un punto.");break;
+        case SIN_ARR:         puts("Error: el correo no tiene @.");break;
+        case MAS_UN_ARR:      puts("Error: el correo tiene mas de un @.");break;
+        case MAS_DOS_PUNT:    puts("Error: hay mas de dos puntos en el dominio.");break;
+        case SIN_PUNTO:       puts("Error: no hay punto en el dominio.");break;
+    }
+}
