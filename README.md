@@ -18,9 +18,9 @@ Para llevar el trackeo del proyecto entre los 7 miembros del equipo, utilizamos 
 |-----:|:--------------------------------------------|:------------|:------------|:-------------------|
 |   01 | Implementación TDA Índice (Primitivas)      | 🔴 Por hacer |             | Memoria Dinámica   |
 |   02 | Gestión de Memoria (Realloc +30%)           | 🔴 Por hacer |             | Estructura Crítica |
-|   03 | Cálculo de CUIL (Algoritmo + Dígito)        | 🔴 Por hacer |             | Punto 1            |
-|   04 | Normalización de Apellidos y Nombres        | 🔴 Por hacer |             | Punto 2            |
-|   05 | Validador de Email (Estructura y Tutor)     | 🔴 Por hacer |             | Punto 3            |
+|   03 | Cálculo de CUIL (Algoritmo + Dígito)        | 🟢 Hecho     |             | Punto 1            |
+|   04 | Normalización de Apellidos y Nombres        | 🟢 Hecho     |             | Punto 2            |
+|   05 | Validador de Email (Estructura y Tutor)     | 🟢 Hecho     |             | Punto 3            |
 |   06 | Carga de Datos: Miembros (CSV)              | 🔴 Por hacer |             | Entrada            |
 |   07 | Carga de Datos: Títulos (CSV)               | 🔴 Por hacer |             | Entrada            |
 |   08 | Sistema de Auditoría de Errores             | 🔴 Por hacer |             | Reporte Errores    |
