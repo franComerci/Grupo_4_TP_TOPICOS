@@ -35,6 +35,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="cinefiliaHeader.h" />
+		<Unit filename="gestionArchivos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gestionArchivos.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

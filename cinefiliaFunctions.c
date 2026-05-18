@@ -39,8 +39,8 @@ int calcularDigito(int *tipo, long dni)
     {
         if( *tipo == 20)
         {
-            return 9;
             *tipo = 23;
+            return 9;
         }
 
         else
@@ -181,8 +181,8 @@ char *normalizarNombre(char *nya)
             write++;
         }
 
-        *write = '\0'; //llego al fin, solamente con nombres y apellido, sin basura,
     }
+    *write = '\0'; //llego al fin, solamente con nombres y apellido, sin basura,
     char *ptr_espacio = nya;
 
     while(*ptr_espacio != ' ' && *ptr_espacio != '\0')
@@ -193,7 +193,7 @@ char *normalizarNombre(char *nya)
     if(*ptr_espacio == ' ')
     {
         size_t mover = strlen(ptr_espacio) + 1;
-        memmove(ptr_espacio + 1, ptr_espacio, mover);
+        memmove(ptr_espacio + 1, ptr_espacio, mover); // hago el memmove para poner la coma donde va, o sea despues del primer espacio
 
         *ptr_espacio = ',';
     }
@@ -201,80 +201,194 @@ char *normalizarNombre(char *nya)
     return nya;
 }
 
-void leerArchivo(FILE *archivo)
+
+
+//TDA vector
+
+void vector_crear(t_vector *v)//inicializo el vec y las variables
 {
-    t_miembros *miembro;
-    char registro[REG];
+    v->vec = NULL;
+    v->cantidad = 0;
+    v->capacidad = 0;
+}
 
-    fgets(registro,sizeof(registro),archivo);
-
-    while (fgets(registro,sizeof(registro),archivo) != NULL)
+int vector_insertar(t_vector *v, t_miembros nuevo) //manejo como entran los nuevos miembros
+{
+    if(v->cantidad >= v->capacidad)
     {
-       trozado(registro,miembro);
+        int nuevaCap =(v->capacidad == 0)? 10: v->capacidad * 2; // primero le asigno 10 si es 0, si no lo duplico
+        t_miembros *aux= (t_miembros *)realloc(v->vec, nuevaCap * sizeof(t_miembros)); // calculo la nueva capacidad si es que se lleno el vec
 
+        if(aux == NULL)
+            return ERROR_MEMORIA;
+
+        v->vec = aux;
+        v->capacidad = nuevaCap;
     }
 
+    v->vec[v->cantidad] = nuevo; // lo pongo en cantidad suponiendo que siempre se inserta al final
+    v->cantidad++;
+
+    return EXITO;
 }
 
-void trozado(char linea, t_miembros m)
+//fechas
+void vector_destruir(t_vector *v)
 {
-    char *act = strchr(linea, '\n');
-    if (act)
-        *act = '\0';
-    //emailTutor
-    act = strrchr(linea, ';');
-    strcpy(m->emailTutor, act + 1);
-    *act = '\0';
+    if(v->vec != NULL)
+    {
+        free(v->vec);
+        v->vec = NULL;
+    }
 
-    //plan
-    act = strrchr(linea, ';');
-    strcpy(m->plan, act + 1);
-    act = '\0';
-
-    //estado
-    act = strrchr(linea, ';');
-    m->estado =(act + 1);
-    *act = '\0';
-
-    // ultima fecha paga
-    act = strrchr(linea, ';');
-    m->ultimaCuota = parsear_fecha(act + 1);
-    *act = '\0';
-
-    // fecha afiliacion
-    act = strrchr(linea, ';');
-    m->fechaAfiliacion = parsear_fecha(act + 1);
-    act = '\0';
-
-    // sexo
-    act = strrchr(linea,';');
-    m->sexo =(act + 1);
-    *act = '\0';
-
-    // fecha nacimiento
-    act = strrchr(linea, ';');
-    m->fnac = parsear_fecha(act + 1);
-    *act = '\0';
-
-    //nombre y apellido
-    act = strrchr(linea, ';');
-    strcpy(m->nya, act + 1);
-    *act = '\0';
-
-    //dni
-    m->dni = strtol(linea, NULL, 10); //STRTOL = string to long
-
-    //cuil y categoria van a quedar con basura
+    v->cantidad = 0;
+    v->capacidad = 0;
 }
 
-t_fecha parsear_fecha(const char *cad)
+//validaciones de fechas para la estructura
+int validarFechaNac(t_fecha *fNac, t_fecha *fProc)
 {
-    t_fecha f = {0, 0, 0}; //f.d = 0, f.m = 0, f.a = 0
+    if(!esFechaValida(fNac)) return FECHA_INVALIDA;
+    int edad = fProc->a - fNac->a;
 
-    if(cad == NULL ||*cad == '\0')
-        return f;
+    return (edad >= 10) ? EXITO : EDAD_MENOR_10;
+}
 
-    sscanf(cad, "%d/%d/%d", &f.d, &f.m, &f.a);
+int validarFechaAfil(t_fecha *fAfil, t_fecha *fNac, t_fecha *fProc)
+{
+    if(!esFechaValida(fAfil)) return FECHA_INVALIDA;
 
-    return f;
+    int dif = diferenciaEntreFechas(fNac, fProc);
+
+    int difProceso = diferenciaEntreFechas(fAfil, fProc);
+    return (dif >= 0 && difProceso >= 0)? EXITO: FECHA_AFIL_MAL;
+}
+
+
+int validarUltimaCuota(t_fecha *fCuota, t_fecha *fAfil, t_fecha *fProc)
+{
+    if(!esFechaValida(fCuota)) return FECHA_INVALIDA;
+    int difAfil = diferenciaEntreFechas(fAfil, fCuota);
+    int difProc = diferenciaEntreFechas(fCuota, fProc);
+
+    return (difAfil >= 0 && difProc >= 0)? EXITO : CUOTA_FUERA_RANG;
+}
+
+
+//funciones de fechas
+
+
+void ingresarFecha(t_fecha *f)
+{
+    puts("Ingrese una fecha con formato DD / MM / AAAA:");
+    scanf("%02d / %02d / %04d", &f->d, &f->m, &f->a);
+    while (!esFechaValida(f))
+    {
+        puts("Fecha invalida. Recuerde que el formato es DD / MM / AAAA");
+        scanf("%02d / %02d / %04d", &f->d, &f->m, &f->a);
+    }
+}
+
+bool esFechaValida(const t_fecha *f)
+{
+    if (f->a > 1600 && f->m >= 1 && f->m <= 12 && f->d >= 1 && f->d <= cantDiaMes(f->m, f->a))
+    {
+        return true;
+    }
+    return false;
+}
+
+int cantDiaMes(int m, int a)
+{
+    int dias_por_mes[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (m == 2 && esBisiesto(a))
+    {
+        return 29;
+    }
+    return *(dias_por_mes+m);
+}
+
+bool esBisiesto(int a)
+{
+    return ((a%4 == 0 && a%100 != 0) || a%400 == 0);
+}
+
+t_fecha sumarDiasAFecha(const t_fecha *f, int dias)
+{
+    int cdm;
+    t_fecha f2 = *f;
+    f2.d += dias;
+    while (f2.d > (cdm = cantDiaMes(f2.m, f2.a)))
+    {
+        f2.d -= cdm;
+        f2.m++;
+        if (f2.m > 12)
+        {
+            f2.m = 1;
+            f2.a++;
+        }
+    }
+    return f2;
+}
+
+void mostrarFecha(const t_fecha *f)
+{
+    printf("%02d / %02d / %4d", f->d, f->m, f->a);
+}
+
+int compararFecha(const t_fecha *f1, const t_fecha *f2)
+{
+    return (f1->a == f2->a && f1->d == f2->d && f1->m == f2->m);
+}
+
+t_fecha restarDiasAFecha(const t_fecha *f, int dias)
+{
+    t_fecha f2 = *f;
+    f2.d -= dias;
+    while (f2.d < 1)
+    {
+        f2.m--;
+        if (f2.m < 1)
+        {
+            f2.m = 12;
+            f2.a--;
+        }
+        f2.d += cantDiaMes(f2.m, f2.a);
+    }
+    return f2;
+}
+
+int diferenciaEntreFechas(t_fecha *f1, t_fecha *f2)
+{
+    t_fecha f = *f1;
+    int cantDias = 0;
+
+    if (compararFecha(f1,f2))
+    {
+        return 0;
+    }
+
+    if (f1->a > f2->a || (f1->a == f2->a && f1->m > f2->m) || (f1->a == f2->a && f1->m == f2->m && f1->d > f2->d))
+    {
+        while(!compararFecha(f2, &f))
+        {
+            f = restarDiasAFecha(&f, 1);
+            cantDias--;
+        }
+    }
+    else
+    {
+        while(!compararFecha(f2, &f))
+        {
+            f = sumarDiasAFecha(&f, 1);
+            cantDias++;
+        }
+    }
+    return cantDias;
+}
+
+int diaDeLaSemana(t_fecha *f)
+{
+    t_fecha referencia = {7, 1, 1990}; // Fue domingo
+    return diferenciaEntreFechas(&referencia, f) % 7; // Domingo = 0, Lunes = 1, etc.
 }
