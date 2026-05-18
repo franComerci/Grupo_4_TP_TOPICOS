@@ -21,7 +21,7 @@ Para llevar el trackeo del proyecto entre los 7 miembros del equipo, utilizamos 
 |   03 | Cálculo de CUIL (Algoritmo + Dígito)        | 🟢 Hecho     |             | Punto 1            |
 |   04 | Normalización de Apellidos y Nombres        | 🟢 Hecho     |             | Punto 2            |
 |   05 | Validador de Email (Estructura y Tutor)     | 🟢 Hecho     |             | Punto 3            |
-|   06 | Carga de Datos: Miembros (CSV)              | 🔴 Por hacer |             | Entrada            |
+|   06 | Carga de Datos: Miembros (CSV)              | 🟢 Hecho     |             | Entrada            |
 |   07 | Carga de Datos: Títulos (CSV)               | 🔴 Por hacer |             | Entrada            |
 |   08 | Sistema de Auditoría de Errores             | 🔴 Por hacer |             | Reporte Errores    |
 |   09 | Menú Principal e Interfaz de Consola        | 🔴 Por hacer |             | Interfaz           |
