@@ -74,6 +74,7 @@ char *normalizarNombre(char *nya);
 int validarUltimaCuota(t_fecha *fCuota, t_fecha *fAfil, t_fecha *fProc);
 int validarFechaAfil(t_fecha *fAfil, t_fecha *fNac, t_fecha *fProc);
 int validarFechaNac(t_fecha *fNac, t_fecha *fProc);
+int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc);
 
 //TDA VECTOR
 void vector_crear(t_vector *v);

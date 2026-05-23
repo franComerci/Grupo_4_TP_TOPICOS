@@ -392,3 +392,25 @@ int diaDeLaSemana(t_fecha *f)
     t_fecha referencia = {7, 1, 1990}; // Fue domingo
     return diferenciaEntreFechas(&referencia, f) % 7; // Domingo = 0, Lunes = 1, etc.
 }
+
+int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc)
+{
+    int edad = fProc->a - fNac->a;
+
+    if(fProc->m < fNac->m || (fProc->m == fNac->m && fProc->d < fNac->d)) // por si todavía no cumplió años
+        edad--;
+
+    if(edad < 18)
+    {
+        if(*(emailT) == '\0')
+            return ERROR_TUTOR;
+        else
+            return validarCorreo(emailT);
+    }
+
+    if(*(emailT)!= '\0') // si es mayor de edad puede tener mail de tutor igual, se verifica que sea correcto
+        return validarCorreo(emailT);
+
+
+    return EXITO;
+}
