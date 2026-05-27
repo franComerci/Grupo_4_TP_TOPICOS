@@ -8,7 +8,7 @@ t_fecha parsear_fecha(const char *cad)
         return f;
 
     sscanf(cad, "%d/%d/%d", &f.d, &f.m, &f.a);
-
+    
     return f;
 }
 

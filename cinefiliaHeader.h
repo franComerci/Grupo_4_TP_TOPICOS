@@ -65,7 +65,7 @@ typedef struct{
     int capacidad;
 }t_vector;
 
-void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy);
+//void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy);
 
 char *crearCuil(long dni, char sexo);
 int calcularDigito(int *tipo, long dni);
@@ -94,5 +94,7 @@ int compararFecha(const t_fecha*, const t_fecha*);
 t_fecha restarDiasAFecha(const t_fecha*f, int dias);
 int diferenciaEntreFechas(t_fecha*, t_fecha*);
 int diaDeLaSemana(t_fecha*);
+
+//COMPARACION
 
 #endif // CINEFILIAHEADER_H_INCLUDED

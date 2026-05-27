@@ -18,7 +18,7 @@ int calcularDigito(int *tipo, long dni)
     *ptr = (*tipo) % 10;
     ptr--; //separado[0]
 
-    *ptr = (*tipo)/10; //ahi me queda la decena, que va a se 2 o 3
+    *ptr = (*tipo)/10; //ahi me queda la decena, que va a ser 2 o 3
 
     ptr = separado;
     int *mult = nros;
@@ -397,7 +397,7 @@ int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc)
 {
     int edad = fProc->a - fNac->a;
 
-    if(fProc->m < fNac->m || (fProc->m == fNac->m && fProc->d < fNac->d)) // por si todavía no cumplió años
+    if(fProc->m < fNac->m || (fProc->m == fNac->m && fProc->d < fNac->d)) // por si todavï¿½a no cumpliï¿½ aï¿½os
         edad--;
 
     if(edad < 18)
@@ -458,34 +458,35 @@ int validarCategoria(char *cat)
    return (strcasecmp(cat, "BASIC")== 0 || strcasecmp(cat, "PREMIUM")== 0 || strcasecmp(cat, "VIP")== 0 || strcasecmp(cat, "FAMILY")== 0)? EXITO : ERROR_CATEGORIA;
 }
 
-void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy)
-{
-    t_miembros nuevomiemb;
-
-
-    while(fread(&nuevomiemb,sizeof(t_miembros),1,arch))
-    {
-        int flag = EXITO;
-
-        flag = (flag == EXITO)? validarDni(nuevomiemb.dni) : flag;
-        flag = (flag == EXITO)? validarSexo(nuevomiemb.sexo) : flag;
-        flag = (flag == EXITO)? validarFechaNac(&nuevomiemb.fnac, &hoy) : flag;
-        flag = (flag == EXITO)? validarFechaAfil(&nuevomiemb.fechaAfiliacion, &nuevomiemb.fnac, &hoy) : flag;
-        flag = (flag == EXITO)? valEmailTut(nuevomiemb.emailTutor, &nuevomiemb.fnac, &nuevomiemb.fechaAfiliacion) : flag;
-        flag = (flag == EXITO)? validarCategoria(nuevomiemb.categoria) : flag;
-
-        if(flag == EXITO)
-        {
-            char *cuil = crearCuil(nuevomiemb.dni, nuevomiemb.sexo);
-            strcpy(nuevomiemb.cuil, cuil);
-            free(cuil);
-            normalizarNombre(nuevomiemb.nya);
-
-            flag = vector_insertar(vect,nuevomiemb);
-        }
-        else
-        {
-            //FUNCION PARA AUDITAR ERRORES
-        }
-    }
-}
+//void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy)
+//{
+//    t_miembros nuevomiemb;
+//
+//
+//    while(fread(&nuevomiemb,sizeof(t_miembros),1,arch))
+//    {
+//        int flag = EXITO;
+//
+//        flag = (flag == EXITO)? validarDni(nuevomiemb.dni) : flag;
+//        flag = (flag == EXITO)? validarSexo(nuevomiemb.sexo) : flag;
+//        flag = (flag == EXITO)? validarFechaNac(&nuevomiemb.fnac, &hoy) : flag;
+//        flag = (flag == EXITO)? validarFechaAfil(&nuevomiemb.fechaAfiliacion, &nuevomiemb.fnac, &hoy) : flag;
+//        flag = (flag == EXITO)? valEmailTut(nuevomiemb.emailTutor, &nuevomiemb.fnac, &nuevomiemb.fechaAfiliacion) : flag;
+//        flag = (flag == EXITO)? validarCategoria(nuevomiemb.categoria) : flag;
+//
+//        if(flag == EXITO)
+//        {
+//            char *cuil = crearCuil(nuevomiemb.dni, nuevomiemb.sexo);
+//            strcpy(nuevomiemb.cuil, cuil);
+//            free(cuil);
+//            normalizarNombre(nuevomiemb.nya);
+//
+//            flag = vector_insertar(vect,nuevomiemb);
+//        }
+//        else
+//        {
+//            //FUNCION PARA AUDITAR ERRORES
+//        }
+//    }
+//}
+//
