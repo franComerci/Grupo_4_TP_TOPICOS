@@ -26,6 +26,7 @@
 #define CUOTA_FUERA_RANG -17
 #define ERROR_TUTOR -18
 #define ERROR_VALID -19
+#define ERROR_CATEGORIA -20
 
 
 
@@ -63,6 +64,8 @@ typedef struct{
     int cantidad;
     int capacidad;
 }t_vector;
+
+void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy);
 
 char *crearCuil(long dni, char sexo);
 int calcularDigito(int *tipo, long dni);

@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1779865480 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t\grupo_4_tp_topicos\main.c
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"gestionArchivos.h"
+
+1779865518 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t\grupo_4_tp_topicos\cinefiliaheader.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdbool.h>
+	<ctype.h>
+
+1779566628 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t\grupo_4_tp_topicos\gestionarchivos.h
+	"cinefiliaHeader.h"
+

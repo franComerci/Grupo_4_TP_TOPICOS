@@ -414,3 +414,78 @@ int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc)
 
     return EXITO;
 }
+
+char *normalizarNomPel(char *gen_o_tit)
+{
+    if(gen_o_tit == NULL)
+        return NULL;
+
+    char *read = gen_o_tit;
+    char *write = gen_o_tit;
+
+    while(*read != '\0' && !esLetra(*read)) //le agrego el \0 porque con una cadena vacia se rompe
+        read++;
+
+    ///primero voy a sacar todo lo que no sea letra
+    while(*read != '\0')
+    {
+        *write = miToUpper(*read); //primer letra
+        write++;
+        read++;
+        while(*read != '\0' && esLetra(*read))//resto del nombre
+        {
+            *write = miToLower(*read);
+            write++;
+            read++;
+        }
+        while(*read != '\0' && !esLetra(*read)) //no le doy bola a la basura ni a los espacios
+            read++;
+
+        if(*read != '\0')
+        {
+            *write = ' ';
+            write++;
+        }
+
+    }
+    *write = '\0';
+    return gen_o_tit;
+
+}
+
+int validarCategoria(char *cat)
+{
+   return (strcasecmp(cat, "BASIC")== 0 || strcasecmp(cat, "PREMIUM")== 0 || strcasecmp(cat, "VIP")== 0 || strcasecmp(cat, "FAMILY")== 0)? EXITO : ERROR_CATEGORIA;
+}
+
+void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy)
+{
+    t_miembros nuevomiemb;
+
+
+    while(fread(&nuevomiemb,sizeof(t_miembros),1,arch))
+    {
+        int flag = EXITO;
+
+        flag = (flag == EXITO)? validarDni(nuevomiemb.dni) : flag;
+        flag = (flag == EXITO)? validarSexo(nuevomiemb.sexo) : flag;
+        flag = (flag == EXITO)? validarFechaNac(&nuevomiemb.fnac, &hoy) : flag;
+        flag = (flag == EXITO)? validarFechaAfil(&nuevomiemb.fechaAfiliacion, &nuevomiemb.fnac, &hoy) : flag;
+        flag = (flag == EXITO)? valEmailTut(nuevomiemb.emailTutor, &nuevomiemb.fnac, &nuevomiemb.fechaAfiliacion) : flag;
+        flag = (flag == EXITO)? validarCategoria(nuevomiemb.categoria) : flag;
+
+        if(flag == EXITO)
+        {
+            char *cuil = crearCuil(nuevomiemb.dni, nuevomiemb.sexo);
+            strcpy(nuevomiemb.cuil, cuil);
+            free(cuil);
+            normalizarNombre(nuevomiemb.nya);
+
+            flag = vector_insertar(vect,nuevomiemb);
+        }
+        else
+        {
+            //FUNCION PARA AUDITAR ERRORES
+        }
+    }
+}
