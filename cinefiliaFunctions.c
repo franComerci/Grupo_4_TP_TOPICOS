@@ -455,7 +455,7 @@ char *normalizarNomPel(char *gen_o_tit)
 
 int validarPlan(char *cat)
 {
-   return (strcasecmp(cat, "BASIC")== 0 || strcasecmp(cat, "PREMIUM")== 0 || strcasecmp(cat, "VIP")== 0 || strcasecmp(cat, "FAMILY")== 0)? EXITO : ERROR_CATEGORIA;
+   return (strcasecmp(cat, "BASIC")== 0 || strcasecmp(cat, "PREMIUM")== 0 || strcasecmp(cat, "VIP")== 0 || strcasecmp(cat, "FAMILY")== 0)? EXITO : ERROR_PLAN;
 }
 
 int comparar_dni(const void *dniA, const void *dniB)
@@ -481,7 +481,7 @@ y consistencia de estos (ídem proceso de generación del archivo). Insertar en 
 el índice.Si se detectan errores, se ignora todo lo ingresado.
 */
 
-int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, t_size cantelem, t_size tam)
+int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, t_size cantelem, t_size tam, t_fecha fProc)
 {
     FILE *maestro = fopen(arch,"r+b");
     if(maestro == NULL)
@@ -490,13 +490,13 @@ int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, t_size ca
         getch();
         return ERROR_ARCHIVO;
     }
-    
+
     t_miembros aux;
-    
+
     printf("Ingrese el DNI del miembro a dar de Alta: ");
     scanf("%ld",&aux.dni);
     int band = indice_buscar(vec_indices, &aux.dni, vec_indices->cantidad_elementos_actual, sizeof(t_reg_indice), comparar_dni);
-    
+
     if(validarDni(aux.dni) != EXITO)
     {
         fclose(maestro);
@@ -505,52 +505,117 @@ int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, t_size ca
 
     if(band != NO_EXISTE)
         return ERROR_DNI_DUP;
-  
+
+
 
     fflush(stdin);
     printf("Ingrese el nombre y apellido del miembro a dar de Alta: ");
     LeerTexto(aux.nya, STRING);
+
     normalizarNombre(aux.nya);
 
-    print("Para el miembro a dar de alta; ");
+    printf("Para el miembro a dar de alta: ");
     ingresarFecha(&aux.fnac);
 
+    band = validarFechaNac(&aux.fnac, &fProc);
+
+    if(band != EXITO)
+    {
+        fclose(maestro);
+        return EDAD_MENOR_10;
+    }
+
+    validarCat(&fProc,&aux);
+
+    if(strcmp(aux.categoria,"MAYOR"))
+    {
+        printf("Al ser menor, el miembro debe registrar un email de un tutor/a: ");
+        LeerTexto(aux.emailTutor,TAM_TUTOR);
+        band = validarCorreo(aux.emailTutor);
+        if(band!=EXITO)
+        {
+            fclose(maestro);
+            return band;
+        }
+    }
+
+    fflush(stdin);
     printf("Ingrese el sexo del miembro a dar de alta (M/F/O): ");
     scanf("%c",&aux.sexo);
+
     band = validarSexo(aux.sexo);
+
     if(band!=EXITO)
     {
         fclose(maestro);
         return SEXONT;
     }
-    
-    //FALTA VALIDAR FECHA DE PROCESO
 
-    
- 
-    
+    char *cuilgen = crearCuil(aux.dni,aux.sexo);
+
+    if(cuilgen == NULL)
+    {
+        fclose(maestro);
+        return ERROR_MEMORIA;
+    }
+
+    strcpy(aux.cuil,cuilgen);
+    free(cuilgen);
+
+    //FALTA VALIDAR FECHA DE PROCESO
+    //FALTA VALIDAR ULTIMA CUOTA
+
+    aux.estado = 'A';
+
+    fflush(stdin);
+    printf("Ingrese el plan al que pertenece el miembro a dar de alta: ");
+    LeerTexto(aux.plan,TAM_PLAN);
+
+    band = validarPlan(aux.plan);
+
+    if(band!=EXITO)
+    {
+        fclose(maestro);
+        return ERROR_PLAN;
+    }
+
+    fwrite(&aux,sizeof(t_miembros),1,maestro);
+
+    t_reg_indice nuevoind;
+    nuevoind.dni = aux.dni;
+    nuevoind.nro_reg = v->cantidad;
+    indice_insertar(vec_indices,&aux,sizeof(t_reg_indice),comparar_dni);
+
+    vector_insertar(v,aux);
+
+    fclose(arch);
+
 }
 
-int validarCat(t_fecha *fnac, t_fecha *fProc)
+void validarCat(t_fecha *fProc, t_miembros *miembro)
 {
-    if(fProc->m < fNac->m || (fProc->m == fNac->m && fProc->d < fNac->d)) // por si todav�a no cumpli� a�os
+    int edad = fproc->a - miembro->fnac.a;
+    if(fProc->m < miembro->fnac.m || (fProc->m == miembro->fnac.m && fProc->d < miembro->fnac.d)) // por si todav�a no cumpli� a�os
             edad--;
 
-        if(edad < 18)
+    if(edad < 18)
+        strcpy(miembro->categoria,"MENOR");
+    else
+        strcpy(miembro->categoria,"MAYOR");
 }
 
 void LeerTexto (char texto[], int largo)
-{	
+{
     int i=0;
 	fgets(texto, largo, stdin);
 	while (texto[i]!='\0')
-	{	
+	{
 	    if (texto[i]=='\n')
 		    texto[i]='\0';
 		else
 		    i++;
 	}
-}    
+}
 
 
 int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar)
@@ -559,27 +624,27 @@ int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar)
     miembroAux.dni = dniBorrar;
 
     int pos = indice_buscar(indice, &miembroAux, indice->cantidad_elementos_actual, sizeof(t_miembros),comparar_dni);
-    
+
     if(pos == NO_EXISTE)
         return ERROR;
 
     FILE *arch = fopen(nombreArch, "r+b");
-    
+
     if(!arch)
         return ERROR_ARCHIVO;
-    
+
     t_miembros aux;
-    
+
     fseek(arch, pos * sizeof(t_miembros), 0);
 
     if(fread(&aux, sizeof(t_miembros), 1, arch))
     {
         if(aux.dni == dniBorrar)
-        { 
+        {
             aux.estado = 'B';
 
             fseek(arch, pos * sizeof(t_miembros), 0);//me posiciono de vuelta
-            
+
             fwrite(&aux, sizeof(t_miembros), 1, arch); //actualizo
         }
     }
@@ -587,7 +652,7 @@ int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar)
     indice_eliminar(indice, &miembroAux, sizeof(t_miembros), comparar_dni);
 
     fclose(arch);
-    
+
     return OK;
 }
 //void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy)

@@ -7,6 +7,8 @@
 #include <ctype.h>
 #define STRING 60
 #define TAM_GENERO 20
+#define TAM_PLAN 10
+#define TAM_TUTOR 30
 #define EXITO 0
 #define NADA_ANTES_ARR -1
 #define VALOR_INC -2
@@ -31,6 +33,7 @@
 #define ERROR_STOCK -21
 #define ERROR_ARCHIVO -22
 #define ERROR_DNI_DUP -23
+#define ERROR_PLAN -24
 
 
 #define TAMCUIL 14
@@ -90,6 +93,8 @@ int validarFechaNac(t_fecha *fNac, t_fecha *fProc);
 int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc);
 int validarPlan(char *cat);
 int comparar_dni(const void *dniA, const void *dniB);
+void LeerTexto (char texto[], int largo);
+void validarCat(t_fecha *fProc, t_miembros *miembro);
 
 //PELICULAS
 char *normalizarNomPel(char *gen_o_tit);

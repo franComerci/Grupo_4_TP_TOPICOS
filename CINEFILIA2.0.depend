@@ -15,3 +15,36 @@
 1779566628 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t\grupo_4_tp_topicos\gestionarchivos.h
 	"cinefiliaHeader.h"
 
+1780007234 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t2.0\grupo_4_tp_topicos\main.c
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"gestionArchivos.h"
+	"Indices.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"cinefiliaHeader.h"
+	"Indices.h"
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"gestionArchivos.h"
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"Indices.h"
+
+1780009006 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t2.0\grupo_4_tp_topicos\cinefiliaheader.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdbool.h>
+	<ctype.h>
+
+1780007234 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t2.0\grupo_4_tp_topicos\gestionarchivos.h
+	"cinefiliaHeader.h"
+
+1780007234 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\g4t2.0\grupo_4_tp_topicos\indices.h
+	"cinefiliaHeader.h"
+
