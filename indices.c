@@ -3,34 +3,12 @@
 
 int indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo)
 {
-    FILE *maestro=fopen("miembros.dat","r"), *indi = fopen("indice.idx","w+b");
-    int n=1;
-    t_miembros miembro;
-    t_reg_indice idx;
+    indice->vindice = malloc(nmemb * tamanyo);
+    if(indice->vindice == NULL)
+        return ERROR_MEMORIA;
 
-    if(maestro==NULL)
-    {
-        puts("Error al abrir archivo");
-        //getch();
-        exit(1);
-    }
-
-    if(indi ==NULL)
-    {
-        puts("Error al abrir archivo");
-        //getch();
-        exit(1);
-    }
-
-    rewind(maestro);
-
-    while(fread(&miembro,sizeof(t_miembros),1,maestro))
-    {
-        idx.dni = miembro.dni;
-        idx.nro_reg = n++;
-        fwrite(&idx,sizeof(t_reg_indice),1,indi);
-    }
-
+    indice->cantidad_elementos_actual = 0;
+    indice->cantidad_elementos_maxima = nmemb;
 
     return OK;
 }
@@ -52,7 +30,7 @@ int indice_redimensionar(t_indice *indice, size_t nmemb, size_t tamanyo)
     return OK;
 }
 
-//uso memcpy para que quede genérico, para poder usar esta funcion con miembros y peliculas
+//uso memcpy para que quede genï¿½rico, para poder usar esta funcion con miembros y peliculas
 int indice_insertar (t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
     if(indice->cantidad_elementos_actual >= indice->cantidad_elementos_maxima)
@@ -64,7 +42,7 @@ int indice_insertar (t_indice *indice, const void *registro, size_t tamanyo, int
             return ERROR_MEMORIA; //significa que el realloc no funciono
     }
 
-    char *base = (char *)indice->vindice; //lo paso a char para que la multiplicacion sea más fácil y se pueda saltar de uno en uno
+    char *base = (char *)indice->vindice; //lo paso a char para que la multiplicacion sea mï¿½s fï¿½cil y se pueda saltar de uno en uno
 
     int i = indice->cantidad_elementos_actual - 1;
 
@@ -75,6 +53,7 @@ int indice_insertar (t_indice *indice, const void *registro, size_t tamanyo, int
         memcpy(base + ((i+1) * tamanyo), base + (i*tamanyo), tamanyo); //copio lo que esta en i a i+1
         i--;
     }
+
 
     memcpy(base +((i+1) *tamanyo), registro, tamanyo); // aca copio el nuevo registro a lo ultimo
     indice->cantidad_elementos_actual++;
@@ -113,12 +92,12 @@ int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int 
 int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
     int inicio = 0;
-    int fin = indice->cantidad_elementos_actual-1;
+    //int fin = indice->cantidad_elementos_actual - 1; no lo necesito porque tengo nmemb como parametro 
 
     char *base = (char*)indice->vindice; //tengo que pasarlo a char pq es void
-    while(inicio <=fin)
+    while(inicio <= nmemb)
     {
-        int medio = inicio + (fin - inicio)/2; //posicion central
+        int medio = inicio + (nmemb - inicio)/2; //posicion central
 
         void *elementoMedio = base + (medio *tamanyo);
         int comp = cmp(registro, elementoMedio);
@@ -131,7 +110,7 @@ int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, s
             inicio = medio + 1; //el buscado es menor, entonces me muevo para la derecha
         }
         else
-            fin = medio - 1; // el buscado es mayor, entonces me muevo para la izq
+            nmemb = medio - 1; // el buscado es mayor, entonces me muevo para la izq
     }
 
     return NO_EXISTE;
@@ -145,20 +124,20 @@ int indice_vacio(const t_indice *indice)
 
 int indice_lleno(const t_indice *indice)
 {
-    return (indice->cantidad_elementos_actual == indice->cantidad_elementos_maxima? OK :  ERROR);
+    return (indice->cantidad_elementos_actual == indice->cantidad_elementos_maxima? OK :  NO_LLENO);
 
 }
 
 void indice_vaciar(t_indice* indice)
 {
-    indice->cantidad_elementos_actual = 0; //???????????? no sé si hay que hacer un free acá
+    indice->cantidad_elementos_actual = 0; //???????????? no sï¿½ si hay que hacer un free acï¿½
 }
 
 
 int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
     //abro el archivo en modolectura
-    FILE *arch = fopen(path, "rb");
+    FILE *arch = fopen(path, "r");
     if(arch == NULL)
         return ERROR;
     fread(vreg_ind, tamanyo, 1, arch);
@@ -175,7 +154,7 @@ int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tam
 
             if(resul < 0)
             {
-                //significa que si lo meto al final está desordenado entonces tengo que llamar a insertar para que quede ordenado
+                //significa que si lo meto al final estï¿½ desordenado entonces tengo que llamar a insertar para que quede ordenado
                 indice_insertar(indice, vreg_ind, tamanyo, cmp);
                 regProcesado = 1;
 
@@ -196,10 +175,9 @@ int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tam
                    fclose(arch);
                    return ERROR;
                }
+               base = (char *)indice->vindice; ///agregado por gemini
             }
         }
-
-
         void *destino = base + (indice->cantidad_elementos_actual * tamanyo);
 
         memcpy(destino, vreg_ind, tamanyo);
@@ -207,7 +185,6 @@ int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tam
 
         fread(vreg_ind, tamanyo, 1, arch);
     }
-
 
     fclose(arch);
 

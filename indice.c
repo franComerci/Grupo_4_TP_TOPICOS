@@ -3,34 +3,37 @@
 
 int indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo)
 {
+ 
+
+    /*
     FILE *maestro, *indi;
     int n=1;
     t_miembros miembro;
     t_reg_indice idx;
-
+    
     if(maestro = fopen("miembros.dat","r")==NULL)
     {
         puts("Error al abrir archivo");
         getch();
         exit(1);
     }
-
+    
     if(indi = fopen("indice.idx","w+b")==NULL)
     {
         puts("Error al abrir archivo");
         getch();
         exit(1);
     }
-
+    
     rewind(maestro);
-
+    
     while(fread(&miembro,sizeof(t_miembros),1,maestro))
     {
         idx.dni = miembro.dni;
         idx.nro_reg = n++;
         fwrite(&idx,sizeof(t_reg_indice),1,indi);
     }
-
+    */
     
 
 }

@@ -1,14 +1,28 @@
 # depslib dependency file v1.0
-1779136286 source:c:\users\admin\desktop\topicos\cinefilia\main.c
+1779998536 source:c:\users\admin\desktop\topicos\cinefilia\main.c
 	<stdio.h>
 	<stdlib.h>
 	"cinefiliaHeader.h"
 	"gestionArchivos.h"
+	"Indices.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"cinefiliaHeader.h"
+	"Indices.h"
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"gestionArchivos.h"
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"Indices.h"
 
-1779136119 source:c:\users\admin\desktop\topicos\cinefilia\cinefiliafunctions.c
+1779996077 source:c:\users\admin\desktop\topicos\cinefilia\cinefiliafunctions.c
 	"cinefiliaHeader.h"
 
-1779133417 c:\users\admin\desktop\topicos\cinefilia\cinefiliaheader.h
+1779996077 c:\users\admin\desktop\topicos\cinefilia\cinefiliaheader.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -25,9 +39,16 @@
 	<stdbool.h>
 	<ctype.h>
 
-1779134475 source:c:\users\admin\desktop\topicos\cinefilia\gestionarchivos.c
+1779918305 source:c:\users\admin\desktop\topicos\cinefilia\gestionarchivos.c
 	"gestionArchivos.h"
 
 1779134149 c:\users\admin\desktop\topicos\cinefilia\gestionarchivos.h
+	"cinefiliaHeader.h"
+
+1779998221 source:c:\users\admin\desktop\topicos\cinefilia\indices.c
+	"Indices.h"
+	"cinefiliaHeader.h"
+
+1779996419 c:\users\admin\desktop\topicos\cinefilia\indices.h
 	"cinefiliaHeader.h"
 

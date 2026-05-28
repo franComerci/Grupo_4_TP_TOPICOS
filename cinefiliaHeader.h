@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
-#define NOMYAPELARGO 60
+#define STRING 60
+#define TAM_GENERO 20
 #define EXITO 0
 #define NADA_ANTES_ARR -1
 #define VALOR_INC -2
@@ -27,7 +28,9 @@
 #define ERROR_TUTOR -18
 #define ERROR_VALID -19
 #define ERROR_CATEGORIA -20
-
+#define ERROR_STOCK -21
+#define ERROR_ARCHIVO -22
+#define ERROR_DNI_DUP -23
 
 
 #define TAMCUIL 14
@@ -47,7 +50,7 @@ typedef struct{
 typedef struct{
     long dni;
     char cuil[TAMCUIL];
-    char nya[NOMYAPELARGO];
+    char nya[STRING];
     t_fecha fnac;
     char sexo;
     char categoria[TAMCAT];
@@ -65,8 +68,15 @@ typedef struct{
     int capacidad;
 }t_vector;
 
-//void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy);
 
+typedef struct{
+    int idPeli;
+    char titulo[STRING];
+    char genero[TAM_GENERO];
+    int stock;
+}t_pelis;
+//void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy);
+//MIEMBROS
 char *crearCuil(long dni, char sexo);
 int calcularDigito(int *tipo, long dni);
 int validarCorreo(char* correo);
@@ -78,7 +88,13 @@ int validarUltimaCuota(t_fecha *fCuota, t_fecha *fAfil, t_fecha *fProc);
 int validarFechaAfil(t_fecha *fAfil, t_fecha *fNac, t_fecha *fProc);
 int validarFechaNac(t_fecha *fNac, t_fecha *fProc);
 int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc);
+int validarPlan(char *cat);
+int comparar_dni(const void *dniA, const void *dniB);
 
+//PELICULAS
+char *normalizarNomPel(char *gen_o_tit);
+int validarGenero(char *genero);
+int validarStock(t_pelis *v);
 //TDA VECTOR
 void vector_crear(t_vector *v);
 int vector_insertar(t_vector *v, t_miembros nuevo);
@@ -95,6 +111,10 @@ t_fecha restarDiasAFecha(const t_fecha*f, int dias);
 int diferenciaEntreFechas(t_fecha*, t_fecha*);
 int diaDeLaSemana(t_fecha*);
 
-//COMPARACION
+//Alta, Baja y modificación
+
+
+
+
 
 #endif // CINEFILIAHEADER_H_INCLUDED

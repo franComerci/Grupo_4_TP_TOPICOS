@@ -4,7 +4,7 @@
 #define INCREMENTO 1.3
 #define OK 1
 #define ERROR 0
-#define NO_EXISTE -1
+#define NO_EXISTE -100
 #include "cinefiliaHeader"
 
 typedef struct{

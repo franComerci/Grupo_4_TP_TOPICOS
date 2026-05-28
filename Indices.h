@@ -7,7 +7,7 @@
 #define OK 1
 #define ERROR 0
 #define NO_EXISTE -1
-
+#define NO_LLENO -2
 typedef struct
 {
     unsigned nro_reg;
@@ -21,7 +21,7 @@ typedef struct
     unsigned cantidad_elementos_maxima;
 }t_indice;
 
-/**************************************************************************☻
+/**************************************************************************
 Descripción: toma memoria para 100 elementos e inicializa la estructura vacía.
 Parámetros: indice: TDA índice.
  nmemb: cantidad de elementos del índice.

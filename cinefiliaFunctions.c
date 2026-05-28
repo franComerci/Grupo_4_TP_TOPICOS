@@ -1,5 +1,5 @@
 #include "cinefiliaHeader.h"
-
+#include "Indices.h"
 int calcularDigito(int *tipo, long dni)
 {
     int nros[] = {5,4,3,2,7,6,5,4,3,2};
@@ -453,11 +453,143 @@ char *normalizarNomPel(char *gen_o_tit)
 
 }
 
-int validarCategoria(char *cat)
+int validarPlan(char *cat)
 {
    return (strcasecmp(cat, "BASIC")== 0 || strcasecmp(cat, "PREMIUM")== 0 || strcasecmp(cat, "VIP")== 0 || strcasecmp(cat, "FAMILY")== 0)? EXITO : ERROR_CATEGORIA;
 }
 
+int comparar_dni(const void *dniA, const void *dniB)
+{
+    return (((const t_miembros *)dniA)->dni - ((const t_miembros *)dniB)->dni);
+}
+
+
+
+int validarGenero(char *genero)
+{
+    return (strmp(*genero, "Accion") == 0 || strmp(*genero, "Drama")  == 0 || strmp(*genero, "Comedia") == 0 || strmp(*genero, "Terror") == 0) ? EXITO : ERROR_CATEGORIA;
+}
+
+int validarStock(int stock)
+{
+    return stock >= 0 ? EXITO : ERROR_STOCK;
+}
+/*
+Alta títulos/miembro: se obtendrán los datos del teclado, ingresando primero el DNI verificando
+que no exista en el índice. Una vez ingresados todos los datos del miembro, realizar la validación
+y consistencia de estos (ídem proceso de generación del archivo). Insertar en forma ordenada en
+el índice.Si se detectan errores, se ignora todo lo ingresado.
+*/
+
+int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, t_size cantelem, t_size tam)
+{
+    FILE *maestro = fopen(arch,"r+b");
+    if(maestro == NULL)
+    {
+        puts("Error al abrir archivo");
+        getch();
+        return ERROR_ARCHIVO;
+    }
+    
+    t_miembros aux;
+    
+    printf("Ingrese el DNI del miembro a dar de Alta: ");
+    scanf("%ld",&aux.dni);
+    int band = indice_buscar(vec_indices, &aux.dni, vec_indices->cantidad_elementos_actual, sizeof(t_reg_indice), comparar_dni);
+    
+    if(validarDni(aux.dni) != EXITO)
+    {
+        fclose(maestro);
+        return DNI_FUER_RANG;
+    }
+
+    if(band != NO_EXISTE)
+        return ERROR_DNI_DUP;
+  
+
+    fflush(stdin);
+    printf("Ingrese el nombre y apellido del miembro a dar de Alta: ");
+    LeerTexto(aux.nya, STRING);
+    normalizarNombre(aux.nya);
+
+    print("Para el miembro a dar de alta; ");
+    ingresarFecha(&aux.fnac);
+
+    printf("Ingrese el sexo del miembro a dar de alta (M/F/O): ");
+    scanf("%c",&aux.sexo);
+    band = validarSexo(aux.sexo);
+    if(band!=EXITO)
+    {
+        fclose(maestro);
+        return SEXONT;
+    }
+    
+    //FALTA VALIDAR FECHA DE PROCESO
+
+    
+ 
+    
+}
+
+int validarCat(t_fecha *fnac, t_fecha *fProc)
+{
+    if(fProc->m < fNac->m || (fProc->m == fNac->m && fProc->d < fNac->d)) // por si todav�a no cumpli� a�os
+            edad--;
+
+        if(edad < 18)
+}
+
+void LeerTexto (char texto[], int largo)
+{	
+    int i=0;
+	fgets(texto, largo, stdin);
+	while (texto[i]!='\0')
+	{	
+	    if (texto[i]=='\n')
+		    texto[i]='\0';
+		else
+		    i++;
+	}
+}    
+
+
+int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar)
+{
+    t_miembros miembroAux ={0};
+    miembroAux.dni = dniBorrar;
+
+    int pos = indice_buscar(indice, &miembroAux, indice->cantidad_elementos_actual, sizeof(t_miembros),comparar_dni);
+    
+    if(pos == NO_EXISTE)
+        return ERROR;
+
+    FILE *arch = fopen(nombreArch, "r+b");
+    
+    if(!arch)
+        return ERROR_ARCHIVO;
+    
+    t_miembros aux;
+    
+    fseek(arch, pos * sizeof(t_miembros), 0);
+
+    if(fread(&aux, sizeof(t_miembros), 1, arch))
+    {
+        if(aux.dni == dniBorrar)
+        { 
+            aux.estado = 'B';
+
+            fseek(arch, pos * sizeof(t_miembros), 0);//me posiciono de vuelta
+            
+            fwrite(&aux, sizeof(t_miembros), 1, arch); //actualizo
+        }
+    }
+
+    indice_eliminar(indice, &miembroAux, sizeof(t_miembros), comparar_dni);
+
+    fclose(arch);
+    
+    return OK;
+}
 //void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy)
 //{
 //    t_miembros nuevomiemb;
