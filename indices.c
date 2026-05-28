@@ -112,7 +112,6 @@ int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int 
 //uso busqueda binaria
 int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
-    int i = 0,
     int inicio = 0;
     int fin = indice->cantidad_elementos_actual-1;
 
@@ -138,31 +137,80 @@ int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, s
     return NO_EXISTE;
 }
 
-/*
+
 int indice_vacio(const t_indice *indice)
 {
-
-
+    return indice->cantidad_elementos_actual == 0? OK : ERROR;
 }
 
 int indice_lleno(const t_indice *indice)
 {
-
+    return (indice->cantidad_elementos_actual == indice->cantidad_elementos_maxima? OK :  ERROR);
 
 }
 
 void indice_vaciar(t_indice* indice)
 {
-
-
+    indice->cantidad_elementos_actual = 0; //???????????? no sé si hay que hacer un free acá
 }
 
 
-int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t
-tamanyo, int (*cmp)(const void *, const void *))
+int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
+    //abro el archivo en modolectura
+    FILE *arch = fopen(path, "rb");
+    if(arch == NULL)
+        return ERROR;
+    fread(vreg_ind, tamanyo, 1, arch);
+    while(!feof(arch))
+    {
+        int regProcesado = 0;
+        char *base = (char *)indice->vindice;
+
+        if(indice->cantidad_elementos_actual > 0)
+        {
+            void *anterior = base + ((indice->cantidad_elementos_actual - 1) * tamanyo); //TENGO QUE COMPARAR CON EL ULTIMO INSERTADO PORQUE ESTA ORDENADO, no vale la pena usar la funcion de busqueda
+
+            int resul = cmp(vreg_ind, anterior);
+
+            if(resul < 0)
+            {
+                //significa que si lo meto al final está desordenado entonces tengo que llamar a insertar para que quede ordenado
+                indice_insertar(indice, vreg_ind, tamanyo, cmp);
+                regProcesado = 1;
+
+            }
+            else if(resul == 0)//significa que es repetido
+                regProcesado = 1;
+        }
+
+        //aca me baso en que viene ordenado o que es el primer elemento
+        if(regProcesado == 0)
+        {
+            if(indice->cantidad_elementos_actual == indice->cantidad_elementos_maxima)
+            {
+                indice_redimensionar(indice, indice->cantidad_elementos_maxima, tamanyo);
+
+                if(indice->cantidad_elementos_actual == indice->cantidad_elementos_maxima)
+               {
+                   fclose(arch);
+                   return ERROR;
+               }
+            }
+        }
 
 
+        void *destino = base + (indice->cantidad_elementos_actual * tamanyo);
 
+        memcpy(destino, vreg_ind, tamanyo);
+        indice->cantidad_elementos_actual++;
+
+        fread(vreg_ind, tamanyo, 1, arch);
+    }
+
+
+    fclose(arch);
+
+    return OK;
 }
-*/
+
