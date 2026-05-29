@@ -16,8 +16,8 @@ Para llevar el trackeo del proyecto entre los 7 miembros del equipo, utilizamos 
 
 |   ID | Funcionalidad / Tarea                       | Estado      | Encargado   | Categoría          |
 |-----:|:--------------------------------------------|:------------|:------------|:-------------------|
-|   01 | Implementación TDA Índice (Primitivas)      | 🔴 Por hacer |             | Memoria Dinámica   |
-|   02 | Gestión de Memoria (Realloc +30%)           | 🔴 Por hacer |             | Estructura Crítica |
+|   01 | Implementación TDA Índice (Primitivas)      | 🟢 Hecho     |             | Memoria Dinámica   |
+|   02 | Gestión de Memoria (Realloc +30%)           | 🟢 Hecho     |             | Estructura Crítica |
 |   03 | Cálculo de CUIL (Algoritmo + Dígito)        | 🟢 Hecho     |             | Punto 1            |
 |   04 | Normalización de Apellidos y Nombres        | 🟢 Hecho     |             | Punto 2            |
 |   05 | Validador de Email (Estructura y Tutor)     | 🟢 Hecho     |             | Punto 3            |
