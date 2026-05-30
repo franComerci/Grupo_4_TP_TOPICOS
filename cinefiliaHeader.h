@@ -1,26 +1,12 @@
 #ifndef CINEFILIAHEADER_H_INCLUDED
 #define CINEFILIAHEADER_H_INCLUDED
-<<<<<<< HEAD
 
-=======
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
 
-<<<<<<< HEAD
-=======
-#include "FuncionesNormalizar.h"
-#include "gestionArchivos.h"
-#include "Indices.h"
-#include "MenuDeOperaciones.h"
-#include "TDA_FECHA.h"
-#include "TDA_VECTOR.h"
-
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 ///DEFINE
 #define STRING 60
 #define TAM_GENERO 20
@@ -56,7 +42,7 @@
 #define TAMPLAN 10
 #define MAIL 30
 #define REG 150
-<<<<<<< HEAD
+
 //INDICE
 #define CANTIDAD_ELEMENTOS 100
 #define INCREMENTO 1.3
@@ -64,10 +50,9 @@
 #define ERROR 0
 #define NO_EXISTE -1
 #define NO_LLENO -2
+
 //ARCHIVOS
 //#define PATH_ARCH_MIEMBROS "miembros.dat"
-=======
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 
 ///MACROS
 #define miToLower(c) ( ((c) >= 'A' && (c) <= 'Z') ? ((c) + ('a' - 'A') ): (c) )
@@ -111,7 +96,6 @@ typedef struct
     int stock;
 }t_pelis;
 
-<<<<<<< HEAD
 typedef struct
 {
     unsigned nro_reg;
@@ -148,87 +132,87 @@ int ModificarMiembro(t_indice indice, long dniModif, const char *PATH_ARCH_MIEMB
 
 ///INDICE
 /**************************************************************************
-Descripción: toma memoria para 100 elementos e inicializa la estructura vacía.
-Parámetros: indice: TDA índice.
- nmemb: cantidad de elementos del índice.
+DescripciÃ³n: toma memoria para 100 elementos e inicializa la estructura vacÃ­a.
+ParÃ¡metros: indice: TDA Ã­ndice.
+ nmemb: cantidad de elementos del Ã­ndice.
  tamanyo: el espacio en bytes ocupado por cada elemento.
 Retorno: n/a.
 Observaciones:
 **************************************************************************/
 int indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo);
 /**************************************************************************
-Descripción: redimensiona el tamaño del índice.
-Parámetros: indice: TDA índice.
- nmemb: cantidad de elementos del índice.
+DescripciÃ³n: redimensiona el tamaÃ±o del Ã­ndice.
+ParÃ¡metros: indice: TDA Ã­ndice.
+ nmemb: cantidad de elementos del Ã­ndice.
  tamanyo: el espacio en bytes ocupado por cada elemento.
 Retorno: n/a.
 Observaciones: Debe proporcionar el nmemb incrementado en un 30%
 **************************************************************************/
 int indice_redimensionar(t_indice *indice, size_t nmemb, size_t tamanyo);
 /**************************************************************************
-Descripción: inserta en orden según la clave.
-Parámetros: indice: TDA índice.
- registro: el nuevo elemento a insertar en el índice.
+DescripciÃ³n: inserta en orden segÃºn la clave.
+ParÃ¡metros: indice: TDA Ã­ndice.
+ registro: el nuevo elemento a insertar en el Ã­ndice.
  tamanyo: el espacio en bytes ocupado por el elemento a insertar.
- cmp: función de comparación provista.
-Retorno: OK si la operación fue exitosa y ERROR en caso contrario.
-Observaciones: Si el array está lleno, toma un 30 % más de memoria.
+ cmp: funciÃ³n de comparaciÃ³n provista.
+Retorno: OK si la operaciÃ³n fue exitosa y ERROR en caso contrario.
+Observaciones: Si el array estÃ¡ lleno, toma un 30 % mÃ¡s de memoria.
 **************************************************************************/
 int indice_insertar (t_indice *indice, const void *registro, size_t tamanyo,
 int (*cmp)(const void *, const void *));
 /**************************************************************************
-Descripción: elimina el registro del índice.
-Parámetros: indice: TDA índice.
+DescripciÃ³n: elimina el registro del Ã­ndice.
+ParÃ¡metros: indice: TDA Ã­ndice.
  registro: el elemento a eliminar.
  tamanyo: el espacio en bytes ocupado por el elemento a insertar.
- cmp: función de comparación provista.
-Retorno: OK si la operación fue exitosa y ERROR en caso contrario.
+ cmp: funciÃ³n de comparaciÃ³n provista.
+Retorno: OK si la operaciÃ³n fue exitosa y ERROR en caso contrario.
 Observaciones: -
 **************************************************************************/
 int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int
 (*cmp)(const void *, const void *));
 /**************************************************************************
-Descripción: si la clave existe deja el registro en registro.
-Parámetros: indice: TDA índice.
+DescripciÃ³n: si la clave existe deja el registro en registro.
+ParÃ¡metros: indice: TDA Ã­ndice.
  registro: el elemento a buscar.
- nmemb: cantidad de elementos del índice.
+ nmemb: cantidad de elementos del Ã­ndice.
  tamanyo: espacio en bytes ocupado por el elemento a insertar.
- cmp: función de comparación provista.
-Retorno: NO_EXISTE si no existe o si existe, la posición ocupada dentro
+ cmp: funciÃ³n de comparaciÃ³n provista.
+Retorno: NO_EXISTE si no existe o si existe, la posiciÃ³n ocupada dentro
 del array.
 Observaciones: -
 **************************************************************************/
 int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb,
 size_t tamanyo, int (*cmp)(const void *, const void *));
 /**************************************************************************
-Descripción: determina si el índice contiene 0 (cero) elementos.
-Parámetros: indice: TDA índice.
-Retorno: OK si está vacío, cualquier otro valor si no lo está.
+DescripciÃ³n: determina si el Ã­ndice contiene 0 (cero) elementos.
+ParÃ¡metros: indice: TDA Ã­ndice.
+Retorno: OK si estÃ¡ vacÃ­o, cualquier otro valor si no lo estÃ¡.
 Observaciones: -
 **************************************************************************/
 int indice_vacio(const t_indice *indice);
 /**************************************************************************
-descripción: determina si el índice contiene el tamaño máximo posible.
-Parámetros: indice: TDA índice.
-Retorno: OK si está lleno, cualquier otro valor si no lo está.
+descripciÃ³n: determina si el Ã­ndice contiene el tamaÃ±o mÃ¡ximo posible.
+ParÃ¡metros: indice: TDA Ã­ndice.
+Retorno: OK si estÃ¡ lleno, cualquier otro valor si no lo estÃ¡.
 Observaciones: -
 **************************************************************************/
 int indice_lleno(const t_indice *indice);
 /**************************************************************************
-Descripción: deja el índice vacío.
-Parámetros: indice: TDA indice.
+DescripciÃ³n: deja el Ã­ndice vacÃ­o.
+ParÃ¡metros: indice: TDA indice.
 Retorno: No posee.
 Observaciones: -
 **************************************************************************/
 void indice_vaciar(t_indice* indice);
 /**************************************************************************
-Descripción: Carga el array desde un archivo ordenado.
-Parámetros: path: la ruta al archivo binario.
- indice: TDA índice.
- vreg_ind: vector de elementos dentro del índice.
+DescripciÃ³n: Carga el array desde un archivo ordenado.
+ParÃ¡metros: path: la ruta al archivo binario.
+ indice: TDA Ã­ndice.
+ vreg_ind: vector de elementos dentro del Ã­ndice.
  tamanyo: el espacio en bytes ocupado por el elemento a insertar.
- cmp: función de comparación provista.
-Retorno: OK si la operación fue exitosa y ERROR en caso contrario.
+ cmp: funciÃ³n de comparaciÃ³n provista.
+Retorno: OK si la operaciÃ³n fue exitosa y ERROR en caso contrario.
 Observaciones: -
 **************************************************************************/
 int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t
@@ -271,14 +255,9 @@ int validarFechaNac(t_fecha *fNac, t_fecha *fProc);
 int validarGenero(char *genero);
 int validarStock(t_pelis *v);
 
-
-
-
-=======
 /// PROTOTIPOS
 int comparar_dni(const void *dniA, const void *dniB);
 
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 ///PUNTO A (ALTA DE MIEMBROS) TERMINAR !!!
 int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, size_t cantelem, size_t tam, t_fecha fProc);
 void LeerTexto (char texto[], int largo);
