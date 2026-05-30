@@ -173,9 +173,4 @@ char *normalizarNomPel(char *gen_o_tit)
     }
     *write = '\0';
     return gen_o_tit;
-
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
