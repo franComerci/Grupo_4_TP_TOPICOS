@@ -31,7 +31,27 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="FuncionesNormalizar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="FuncionesNormalizar.h" />
 		<Unit filename="Indices.h" />
+		<Unit filename="MenuDeOperaciones.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="MenuDeOperaciones.h" />
+		<Unit filename="TDA_FECHA.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="TDA_FECHA.h" />
+		<Unit filename="TDA_VECTOR.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="TDA_VECTOR.h" />
+		<Unit filename="Validaciones.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Validaciones.h" />
 		<Unit filename="cinefiliaFunctions.c">
 			<Option compilerVar="CC" />
 		</Unit>

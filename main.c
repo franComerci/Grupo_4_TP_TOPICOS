@@ -9,7 +9,6 @@
 int main()
 {
 
-
     char *resultado = crearCuil(12345678, 'E');
     printf("cuil: %s\n", resultado);
     char correojoder[] = " a@a r.a";
@@ -18,8 +17,6 @@ int main()
     free(resultado);
     char nya[60] = "    galleTa   pePE , raul";
     printf("Resultado: '%s'\n", normalizarNombre(nya));
-
-
 
     t_vector vec;
     vector_crear(&vec);
@@ -61,22 +58,13 @@ int main()
 }
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "cinefiliaHeader.h"
-#include "Indices.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include "cinefiliaHeader.h"
-#include "gestionArchivos.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include "cinefiliaHeader.h"
-#include "Indices.h"
 
 int main()
 {
+    EjecutarMenu();
+    
+    /*
     printf("=== FASE 2: ARRANQUE DEL MOTOR DE BASE DE DATOS ===\n\n");
 
     // 1. Inicializar el TDA
@@ -117,4 +105,6 @@ int main()
 
     printf("\n=== SISTEMA CERRADO ===\n");
     return 0;
+
+    */
 }

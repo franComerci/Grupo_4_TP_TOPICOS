@@ -5,6 +5,16 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+
+#include "FuncionesNormalizar.h"
+#include "gestionArchivos.h"
+#include "Indices.h"
+#include "MenuDeOperaciones.h"
+#include "TDA_FECHA.h"
+#include "TDA_VECTOR.h"
+
+
+///DEFINE
 #define STRING 60
 #define TAM_GENERO 20
 #define TAM_PLAN 10
@@ -34,23 +44,26 @@
 #define ERROR_ARCHIVO -22
 #define ERROR_DNI_DUP -23
 #define ERROR_PLAN -24
-
-
 #define TAMCUIL 14
 #define TAMCAT 10
 #define TAMPLAN 10
 #define MAIL 30
 #define REG 150
-///Macros
+
+///MACROS
 #define miToLower(c) ( ((c) >= 'A' && (c) <= 'Z') ? ((c) + ('a' - 'A') ): (c) )
 #define miToUpper(c) ( ((c) >= 'a' && (c) <= 'z') ? ((c) - ('a' - 'A') ): (c) )
 #define esLetra(c) ( ( ((c) >= 'A' && (c) <= 'Z') || ((c) >= 'a' && (c) <= 'z') ) ? 1 : 0 )
 #define esAlpha(c) ( ( (( (c) >= 'A' && (c) <= 'Z')) || ((c) >= 'a' && (c) <= 'z') ) ||  ( (c) >= 0 && (c) <= 9 ) ? 1 : 0 )
-typedef struct{
+
+///STRUCTS
+typedef struct
+{
     int d, m, a;
 }t_fecha;
 
-typedef struct{
+typedef struct
+{
     long dni;
     char cuil[TAMCUIL];
     char nya[STRING];
@@ -64,62 +77,54 @@ typedef struct{
     char emailTutor[MAIL];
 }t_miembros;
 
-
-typedef struct{
+typedef struct
+{
     t_miembros *vec;
     int cantidad;
     int capacidad;
 }t_vector;
 
-
-typedef struct{
+typedef struct
+{
     int idPeli;
     char titulo[STRING];
     char genero[TAM_GENERO];
     int stock;
 }t_pelis;
-//void leerArchivo (FILE *arch, t_vector *vect, t_fecha hoy);
-//MIEMBROS
-char *crearCuil(long dni, char sexo);
-int calcularDigito(int *tipo, long dni);
-int validarCorreo(char* correo);
-void mostrarErrorCorreo(int codigo);
-int validarDni(long dni);
-int validarSexo(char sexo);
-char *normalizarNombre(char *nya);
-int validarUltimaCuota(t_fecha *fCuota, t_fecha *fAfil, t_fecha *fProc);
-int validarFechaAfil(t_fecha *fAfil, t_fecha *fNac, t_fecha *fProc);
-int validarFechaNac(t_fecha *fNac, t_fecha *fProc);
-int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc);
-int validarPlan(char *cat);
+
+/// PROTOTIPOS
 int comparar_dni(const void *dniA, const void *dniB);
+
+///PUNTO A (ALTA DE MIEMBROS) TERMINAR !!!
+int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, size_t cantelem, size_t tam, t_fecha fProc);
 void LeerTexto (char texto[], int largo);
-void validarCat(t_fecha *fProc, t_miembros *miembro);
 
-//PELICULAS
-char *normalizarNomPel(char *gen_o_tit);
-int validarGenero(char *genero);
-int validarStock(t_pelis *v);
-//TDA VECTOR
-void vector_crear(t_vector *v);
-int vector_insertar(t_vector *v, t_miembros nuevo);
-void vector_destruir(t_vector *v);
+///PUNTO B (ALTA DE UN TITULO) FALTANATE!!!
 
 
-//FECHAS
-bool esFechaValida(const t_fecha *f);
-int cantDiaMes(int m, int a);
-bool esBisiesto(int a);
-void mostrarFecha(const t_fecha *f);
-int compararFecha(const t_fecha*, const t_fecha*);
-t_fecha restarDiasAFecha(const t_fecha*f, int dias);
-int diferenciaEntreFechas(t_fecha*, t_fecha*);
-int diaDeLaSemana(t_fecha*);
+///PUNTO C (BAJA DE MIEMBROS) PROBAR !!!
+int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar);
 
-//Alta, Baja y modificación
+///PUNTO D (BAJA DE UN TITULO) FALTANATE!!!
 
 
+/// PUNTO E (MODIFICACION DE UN MIEMBRO) FALTANATE!!!
 
+
+/// PUNTO F (MODIFIACION DE UN TITULO) FALTANATE!!!
+
+
+/// PUNTO G (MOSTRAR INFORMACION DE UN MIEMBRO) FALTANATE!!!
+
+
+/// PUNTO H (ALQUILER DE UN TITULO) FALTANATE!!!
+
+
+///PUNTO I (LISTADO DE MIEMBROS ORDENADOS POR DNI) FALTANATE!!!
+
+
+
+/// PUNTO J (LISTADO DE MIEMBROS POR PLAN) FALTANATE!!!
 
 
 #endif // CINEFILIAHEADER_H_INCLUDED
