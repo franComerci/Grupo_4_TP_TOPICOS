@@ -1,4 +1,4 @@
-#include "TDA_VECTOR.h"
+#include "CinefiliaFunctions.h"
 
 //TDA vector
 void vector_crear(t_vector *v)//inicializo el vec y las variables
