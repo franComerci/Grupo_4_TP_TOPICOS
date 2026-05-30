@@ -286,11 +286,6 @@ int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar);
 ///PUNTO I (LISTADO DE MIEMBROS ORDENADOS POR DNI) FALTANATE!!!
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 /// PUNTO J (LISTADO DE MIEMBROS POR PLAN) FALTANATE!!!
-
 
 #endif // CINEFILIAHEADER_H_INCLUDED
