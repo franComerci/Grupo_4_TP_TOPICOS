@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-#include "Indices.h"
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 #include "cinefiliaHeader.h"
 
 int indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo)
@@ -95,12 +91,7 @@ int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int 
 int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
     int inicio = 0;
-<<<<<<< HEAD
     //int fin = indice->cantidad_elementos_actual - 1; no lo necesito porque tengo nmemb como parametro
-=======
-    //int fin = indice->cantidad_elementos_actual - 1; no lo necesito porque tengo nmemb como parametro 
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
-
     char *base = (char*)indice->vindice; //tengo que pasarlo a char pq es void
     while(inicio <= nmemb)
     {
