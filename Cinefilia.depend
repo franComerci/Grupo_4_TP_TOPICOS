@@ -1,0 +1,105 @@
+# depslib dependency file v1.0
+1779998536 source:c:\users\admin\desktop\topicos\cinefilia\main.c
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"gestionArchivos.h"
+	"Indices.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"cinefiliaHeader.h"
+	"Indices.h"
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"gestionArchivos.h"
+	<stdio.h>
+	<stdlib.h>
+	"cinefiliaHeader.h"
+	"Indices.h"
+
+1779996077 source:c:\users\admin\desktop\topicos\cinefilia\cinefiliafunctions.c
+	"cinefiliaHeader.h"
+
+1779996077 c:\users\admin\desktop\topicos\cinefilia\cinefiliaheader.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdbool.h>
+	<ctype.h>
+
+1778261543 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\grupo_4_tp_topicos\cinefiliafunctions.c
+	"cinefiliaHeader.h"
+
+1778261543 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos\grupo_4_tp_topicos\cinefiliaheader.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdbool.h>
+	<ctype.h>
+
+1779918305 source:c:\users\admin\desktop\topicos\cinefilia\gestionarchivos.c
+	"gestionArchivos.h"
+
+1779134149 c:\users\admin\desktop\topicos\cinefilia\gestionarchivos.h
+	"cinefiliaHeader.h"
+
+1779998221 source:c:\users\admin\desktop\topicos\cinefilia\indices.c
+	"Indices.h"
+	"cinefiliaHeader.h"
+
+1779996419 c:\users\admin\desktop\topicos\cinefilia\indices.h
+	"cinefiliaHeader.h"
+
+1780108522 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\cinefiliafunctions.c
+	"cinefiliaHeader.h"
+
+1780108443 c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\cinefiliaheader.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdbool.h>
+	<ctype.h>
+
+1780101234 c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\funcionesnormalizar.h
+	"cinefiliaHeader.h"
+
+1780105584 c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\gestionarchivos.h
+	"cinefiliaHeader.h"
+
+1780101234 c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\indices.h
+	"cinefiliaHeader.h"
+
+1780101234 c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\menudeoperaciones.h
+
+1780101234 c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\tda_fecha.h
+	"cinefiliaHeader.h"
+
+1780101234 c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\tda_vector.h
+	"cinefiliaHeader.h"
+
+1780107706 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\gestionarchivos.c
+	"cinefiliaHeader.h"
+
+1780106178 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\indices.c
+	"cinefiliaHeader.h"
+
+1780108461 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\main.c
+	"cinefiliaHeader.h"
+
+1780101234 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\funcionesnormalizar.c
+	"FuncionesNormalizar.h"
+
+1780101234 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\tda_fecha.c
+	"TDA_FECHA.h"
+
+1780101234 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\tda_vector.c
+	"TDA_VECTOR.h"
+
+1780108821 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\menudeoperaciones.c
+	"cinefiliaHeader.h"
+
+1780106820 source:c:\users\ignac\downloads\grupo_4_tp_topicos-main\grupo_4_tp_topicos-main\validaciones.c
+	"cinefiliaHeader.h"
+
