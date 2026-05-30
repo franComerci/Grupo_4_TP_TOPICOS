@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "cinefiliaHeader.h"
+=======
+#include "Validaciones.h"
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 
 int validarCorreo(char *correo)
 {
@@ -106,6 +110,7 @@ int validarPlan(char *cat)
 
 int validarGenero(char *genero)
 {
+<<<<<<< HEAD
     //return (strcmp(*genero, "Accion") == 0 || strmp(*genero, "Drama")  == 0 || strmp(*genero, "Comedia") == 0 || strmp(*genero, "Terror") == 0) ? EXITO : ERROR_CATEGORIA;
 }
 /*int validarStock(int stock)
@@ -113,6 +118,16 @@ int validarGenero(char *genero)
     return stock >= 0 ? EXITO : ERROR_STOCK;
 }
 */
+=======
+    return (strmp(*genero, "Accion") == 0 || strmp(*genero, "Drama")  == 0 || strmp(*genero, "Comedia") == 0 || strmp(*genero, "Terror") == 0) ? EXITO : ERROR_CATEGORIA;
+}
+
+int validarStock(int stock)
+{
+    return stock >= 0 ? EXITO : ERROR_STOCK;
+}
+
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 int valEmailTut(char *emailT, t_fecha *fNac, t_fecha *fProc)
 {
     int edad = fProc->a - fNac->a;
@@ -145,4 +160,8 @@ void validarCat(t_fecha *fProc, t_miembros *miembro)
         strcpy(miembro->categoria,"MENOR");
     else
         strcpy(miembro->categoria,"MAYOR");
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c

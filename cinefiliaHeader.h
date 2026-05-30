@@ -1,12 +1,26 @@
 #ifndef CINEFILIAHEADER_H_INCLUDED
 #define CINEFILIAHEADER_H_INCLUDED
+<<<<<<< HEAD
 
+=======
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
 
+<<<<<<< HEAD
+=======
+#include "FuncionesNormalizar.h"
+#include "gestionArchivos.h"
+#include "Indices.h"
+#include "MenuDeOperaciones.h"
+#include "TDA_FECHA.h"
+#include "TDA_VECTOR.h"
+
+
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 ///DEFINE
 #define STRING 60
 #define TAM_GENERO 20
@@ -42,6 +56,7 @@
 #define TAMPLAN 10
 #define MAIL 30
 #define REG 150
+<<<<<<< HEAD
 //INDICE
 #define CANTIDAD_ELEMENTOS 100
 #define INCREMENTO 1.3
@@ -51,6 +66,8 @@
 #define NO_LLENO -2
 //ARCHIVOS
 //#define PATH_ARCH_MIEMBROS "miembros.dat"
+=======
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 
 ///MACROS
 #define miToLower(c) ( ((c) >= 'A' && (c) <= 'Z') ? ((c) + ('a' - 'A') ): (c) )
@@ -94,6 +111,7 @@ typedef struct
     int stock;
 }t_pelis;
 
+<<<<<<< HEAD
 typedef struct
 {
     unsigned nro_reg;
@@ -256,6 +274,11 @@ int validarStock(t_pelis *v);
 
 
 
+=======
+/// PROTOTIPOS
+int comparar_dni(const void *dniA, const void *dniB);
+
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 ///PUNTO A (ALTA DE MIEMBROS) TERMINAR !!!
 int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, size_t cantelem, size_t tam, t_fecha fProc);
 void LeerTexto (char texto[], int largo);
@@ -284,6 +307,10 @@ int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar);
 ///PUNTO I (LISTADO DE MIEMBROS ORDENADOS POR DNI) FALTANATE!!!
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 /// PUNTO J (LISTADO DE MIEMBROS POR PLAN) FALTANATE!!!
 
 

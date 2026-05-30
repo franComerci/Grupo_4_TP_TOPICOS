@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "cinefiliaHeader.h"
+=======
+#include "MenuDeOperaciones.h"
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 
 void MostrarMenu()
 {
@@ -21,6 +25,7 @@ void MostrarMenu()
 
 void EjecutarMenu()
 {
+<<<<<<< HEAD
     char opcion;
     do
     {
@@ -67,4 +72,30 @@ void EjecutarMenu()
             break;
         }
     } while(opcion != 0);
+=======
+    int opcion;
+    do 
+    {
+        mostrarMenu();
+        printf("Ingrese una opcion: ");
+        scanf("%c", &opcion);
+
+        switch(opcion)
+        {
+            case 'A':
+
+            break;
+            case 'B':
+
+            break;
+            case 'C':
+
+            break;   
+
+            
+
+      
+        }
+    }
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 }

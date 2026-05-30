@@ -17,8 +17,15 @@ char *crearCuil(long dni, char sexo)
         tipo = 27;
     else
         tipo = 30;
+<<<<<<< HEAD
     //le tengo que mandar la dir de tipo porque puede cambiar a 23
     int digitoVerif = calcularDigito(&tipo, dni);
+=======
+
+    //le tengo que mandar la dir de tipo porque puede cambiar a 23
+    int digitoVerif = calcularDigito(&tipo, dni);
+
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     sprintf(cuil, "%d-%ld-%d", tipo, dni, digitoVerif);
 
     return cuil;
@@ -167,4 +174,8 @@ char *normalizarNomPel(char *gen_o_tit)
     *write = '\0';
     return gen_o_tit;
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "cinefiliaHeader.h"
+=======
+#include "gestionArchivos.h"
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 
 t_fecha parsear_fecha(const char *cad)
 {
@@ -8,7 +12,11 @@ t_fecha parsear_fecha(const char *cad)
         return f;
 
     sscanf(cad, "%d/%d/%d", &f.d, &f.m, &f.a);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     return f;
 }
 
@@ -84,11 +92,16 @@ void leerArchivo(FILE *archivo, t_vector *vecMiembros, t_fecha fechaProceso)
                 puts("error de memoria\n");
                 return;
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
         }
 
     }
 }
 
+<<<<<<< HEAD
 void mostrarArchivoMiembros(const char *pathArch)
 {
     FILE *pf = fopen(pathArch, "rb");
@@ -122,6 +135,8 @@ void mostrarArchivoMiembros(const char *pathArch)
     fclose(pf);
 }
 
+=======
+>>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 int procesarMiembro(char *registro, t_miembros *miembro, t_fecha fechaProceso)
 {
     trozado(registro, miembro);
