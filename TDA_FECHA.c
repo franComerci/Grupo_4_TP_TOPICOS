@@ -1,4 +1,4 @@
-#include "TDA_FECHA.h"
+#include "cinefiliaFunctions.h"
 
 //funciones de fechas
 void ingresarFecha(t_fecha *f)
