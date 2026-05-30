@@ -1,4 +1,4 @@
-#include "FuncionesNormalizar.h"
+#include "cinefiliaHeader.h"
 
 /// PUNTO 1
 char *crearCuil(long dni, char sexo)
