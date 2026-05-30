@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 
 /*
 #include <stdio.h>
@@ -60,18 +58,13 @@ int main()
 }
 */
 
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 #include "cinefiliaHeader.h"
 
 int main()
 {
-<<<<<<< HEAD
+
     mostrarArchivoMiembros("miembros.dat");
     EjecutarMenu();
-=======
-    EjecutarMenu();
-    
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     /*
     printf("=== FASE 2: ARRANQUE DEL MOTOR DE BASE DE DATOS ===\n\n");
 
@@ -115,8 +108,5 @@ int main()
     return 0;
 
     */
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
+
