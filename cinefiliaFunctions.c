@@ -19,19 +19,10 @@ int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, size_t ca
     if(maestro == NULL)
     {
         puts("Error al abrir archivo");
-<<<<<<< HEAD
         //getch();
-=======
-        getch();
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
         return ERROR_ARCHIVO;
     }
-
     t_miembros aux;
-<<<<<<< HEAD
-=======
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     printf("Ingrese el DNI del miembro a dar de Alta: ");
     scanf("%ld",&aux.dni);
     int band = indice_buscar(vec_indices, &aux.dni, vec_indices->cantidad_elementos_actual, sizeof(t_reg_indice), comparar_dni);
@@ -45,7 +36,6 @@ int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, size_t ca
     if(band != NO_EXISTE)
         return ERROR_DNI_DUP;
 
-<<<<<<< HEAD
     fflush(stdin);
     printf("Ingrese el nombre y apellido del miembro a dar de Alta: ");
     LeerTexto(aux.nya, STRING);
@@ -53,33 +43,13 @@ int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, size_t ca
     printf("Para el miembro a dar de alta: ");
     ingresarFecha(&aux.fnac);
     band = validarFechaNac(&aux.fnac, &fProc);
-=======
-
-
-    fflush(stdin);
-    printf("Ingrese el nombre y apellido del miembro a dar de Alta: ");
-    LeerTexto(aux.nya, STRING);
-
-    normalizarNombre(aux.nya);
-
-    printf("Para el miembro a dar de alta: ");
-    ingresarFecha(&aux.fnac);
-
-    band = validarFechaNac(&aux.fnac, &fProc);
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     if(band != EXITO)
     {
         fclose(maestro);
         return EDAD_MENOR_10;
     }
-<<<<<<< HEAD
-    validarCat(&fProc,&aux);
-=======
-
     validarCat(&fProc,&aux);
 
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     if(strcmp(aux.categoria,"MAYOR"))
     {
         printf("Al ser menor, el miembro debe registrar un email de un tutor/a: ");
@@ -91,89 +61,48 @@ int AltaMiembros(const char *arch, t_indice *vec_indices, t_vector *v, size_t ca
             return band;
         }
     }
-<<<<<<< HEAD
-    fflush(stdin);
-    printf("Ingrese el sexo del miembro a dar de alta (M/F/O): ");
-    scanf("%c",&aux.sexo);
-    band = validarSexo(aux.sexo);
-=======
 
     fflush(stdin);
     printf("Ingrese el sexo del miembro a dar de alta (M/F/O): ");
     scanf("%c",&aux.sexo);
-
     band = validarSexo(aux.sexo);
 
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     if(band!=EXITO)
     {
         fclose(maestro);
         return SEXONT;
     }
-<<<<<<< HEAD
     char *cuilgen = crearCuil(aux.dni,aux.sexo);
-=======
-
-    char *cuilgen = crearCuil(aux.dni,aux.sexo);
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     if(cuilgen == NULL)
     {
         fclose(maestro);
         return ERROR_MEMORIA;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     strcpy(aux.cuil,cuilgen);
     free(cuilgen);
 
     //FALTA VALIDAR FECHA DE PROCESO
     //FALTA VALIDAR ULTIMA CUOTA
-<<<<<<< HEAD
     aux.estado = 'A';
     fflush(stdin);
     printf("Ingrese el plan al que pertenece el miembro a dar de alta: ");
     LeerTexto(aux.plan,TAM_PLAN);
     band = validarPlan(aux.plan);
-=======
 
-    aux.estado = 'A';
-
-    fflush(stdin);
-    printf("Ingrese el plan al que pertenece el miembro a dar de alta: ");
-    LeerTexto(aux.plan,TAM_PLAN);
-
-    band = validarPlan(aux.plan);
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     if(band!=EXITO)
     {
         fclose(maestro);
         return ERROR_PLAN;
     }
-<<<<<<< HEAD
-    fwrite(&aux,sizeof(t_miembros),1,maestro);
-=======
 
     fwrite(&aux,sizeof(t_miembros),1,maestro);
 
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
     t_reg_indice nuevoind;
     nuevoind.dni = aux.dni;
     nuevoind.nro_reg = v->cantidad;
     indice_insertar(vec_indices,&aux,sizeof(t_reg_indice),comparar_dni);
-<<<<<<< HEAD
     vector_insertar(v,aux);
     fclose(maestro);
-=======
-
-    vector_insertar(v,aux);
-
-    fclose(arch);
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
-
 }
 
 void LeerTexto (char texto[], int largo)
@@ -188,63 +117,40 @@ void LeerTexto (char texto[], int largo)
 		    i++;
 	}
 }
-<<<<<<< HEAD
 
 ///PUNTO B (ALTA DE UN TITULO) FALTANATE!!!
 
-
-=======
- 
-///PUNTO B (ALTA DE UN TITULO) FALTANATE!!!
-
-
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 ///PUNTO C (BAJA DE MIEMBROS) PROBAR !!!
 int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar)
 {
     t_miembros miembroAux ={0};
     miembroAux.dni = dniBorrar;
-
     int pos = indice_buscar(indice, &miembroAux, indice->cantidad_elementos_actual, sizeof(t_miembros),comparar_dni);
-
     if(pos == NO_EXISTE)
         return ERROR;
-
     FILE *arch = fopen(nombreArch, "r+b");
-
     if(!arch)
         return ERROR_ARCHIVO;
-
     t_miembros aux;
-
     fseek(arch, pos * sizeof(t_miembros), 0);
-
     if(fread(&aux, sizeof(t_miembros), 1, arch))
     {
         if(aux.dni == dniBorrar)
         {
             aux.estado = 'B';
-
             fseek(arch, pos * sizeof(t_miembros), 0);//me posiciono de vuelta
-
             fwrite(&aux, sizeof(t_miembros), 1, arch); //actualizo
         }
     }
-
     indice_eliminar(indice, &miembroAux, sizeof(t_miembros), comparar_dni);
-
     fclose(arch);
-
     return OK;
 }
 
 ///PUNTO D (BAJA DE UN TITULO) FALTANATE!!!
 
-
-
 /// PUNTO E (MODIFICACION DE UN MIEMBRO) FALTANATE!!!
-<<<<<<< HEAD
+
 /*int ModificarMiembro(t_indice indice, long dniModif, char const * name)
 {
     t_miembros miembro = {0};
@@ -322,10 +228,7 @@ int BajaMiembros(t_indice *indice, const char  *nombreArch, long dniBorrar)
     }
     return OK;
 }*/
-=======
 
-
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 
 /// PUNTO F (MODIFIACION DE UN TITULO) FALTANATE!!!
 
