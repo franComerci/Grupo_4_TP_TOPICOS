@@ -151,13 +151,25 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_fecha fProc,const 
     char linea[REG];
     int cargados, errores;
 
+    //puedo cargar el archivo del dia o el maestro
+    char miembrosFProc[100];
+    char titulosFProc[100];
+    sprintf(miembrosFProc, "miembros_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
+    sprintf(titulosFProc, "titulos_%d_%d_%d.csv", fProc.d, fProc.m,fProc.a);
+
     // --- Miembros ---
-    FILE *fMiembros = fopen(pathMiembros, "r");
-    if (!fMiembros)
+    FILE *fMiembros = fopen(miembrosFProc, "r");
+    if (fMiembros)
     {
-        printf("Advertencia: no se pudo abrir %s\n", pathMiembros);
+        printf("Se detecto archivo diario, abriendo %s\n", miembrosFProc);
     }
     else
+    {
+        printf("No se detecto archivo diario, abriendo %s \n", pathMiembros);
+        fMiembros = fopen(pathMiembros, "r");
+    }
+
+    if(fMiembros)
     {
         cargados = 0;
         errores  = 0;
@@ -181,12 +193,26 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_fecha fProc,const 
     }
 
     // --- Peliculas ---
-    FILE *fPelis = fopen(pathPelis, "r");
+
+    FILE *fPelis = fopen(titulosFProc, "r");
+    if (fPelis)
+    {
+        printf("Se detecto archivo diario, abriendo %s\n", titulosFProc);
+    }
+    else
+    {
+        printf("No se detecto archivo diario, abriendo %s \n", pathPelis);
+        fPelis = fopen(pathPelis, "r");
+    }
+
+
     if (!fPelis)
     {
         printf("Advertencia: no se pudo abrir %s\n", pathPelis);
     }
-    else
+
+
+    if(fPelis)
     {
         cargados = 0;
         errores  = 0;
@@ -244,5 +270,72 @@ void MostrarArchivos(t_indice *indMiembros, t_indice *indPelis)
     {
         printf("%-5d %-35s %-12s %-5d\n",
                (arrP+i)->idPeli, (arrP+i)->titulo, (arrP+i)->genero, (arrP+i)->stock);
+    }
+}
+
+
+void guardarDatos(t_indice *miembros, t_indice *titulos, t_indice *alquileres, t_fecha fProc)
+{
+    char nombreMiembros[100];
+    char nombreTitulos[100];
+    char nombreAlquiler[100];
+
+    sprintf(nombreMiembros, "miembros_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
+    sprintf(nombreTitulos, "titulos_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
+    sprintf(nombreAlquiler, "alquiler_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
+
+    FILE *pfMiembros = fopen(nombreMiembros, "w");
+    if(pfMiembros)
+    {
+        fprintf(pfMiembros,"DNI;NYA;NACIMIENTO;SEXO;AFILIACION;ULT_CUOTA;ESTADO;PLAN;EMAIL_TUTOR\n");
+        t_miembros *vecM = (t_miembros*)miembros->vindice;
+        for(int i = 0; i < (int)miembros->cantidad_elementos_actual; i++)
+        {
+            fprintf(pfMiembros, "%ld;%s;%02d/%02d/%04d;%c;%02d/%02d/%04d;%02d/%02d/%04d;%c;%s;%s\n",
+                    (vecM + i)->dni, (vecM + i)->nya,
+                    (vecM + i)->fnac.d, (vecM + i)->fnac.m, (vecM + i)->fnac.a,
+                    (vecM + i)->sexo,
+                    (vecM + i)->fechaAfiliacion.d, (vecM + i)->fechaAfiliacion.m, (vecM + i)->fechaAfiliacion.a,
+                    (vecM + i)->ultimaCuota.d, (vecM + i)->ultimaCuota.m, (vecM + i)->ultimaCuota.a,
+                    (vecM + i)->estado, (vecM + i)->plan, (vecM + i)->emailTutor
+                    );
+
+        }
+        fclose(pfMiembros);
+        printf("Archivo %s actualizado\n", nombreMiembros);
+    }
+
+
+    FILE *pfTitulos = fopen(nombreTitulos, "w");
+    if(pfTitulos)
+    {
+        fprintf(pfMiembros,"ID_PELI;TITULO;GENERO;STOCK\n");
+        t_pelis *vecP = (t_pelis*)titulos->vindice;
+        for(int i = 0; i < (int)titulos->cantidad_elementos_actual; i++)
+        {
+            fprintf(pfTitulos, "%d;%s;%s;%d\n",
+                    (vecP + i)->idPeli, (vecP + i)->titulo,
+                    (vecP + i)->genero, (vecP + i)->stock
+                    );
+
+        }
+        fclose(pfTitulos);
+        printf("Archivo %s actualizado\n", nombreTitulos);
+    }
+
+
+
+    FILE *pfAlquiler = fopen(nombreAlquiler, "w");
+    if(pfAlquiler)
+    {
+        fprintf(pfAlquiler,"DNI;ID_PELI;CANTIDAD\n");
+        t_alquiler *vecA = (t_alquiler*)alquileres->vindice;
+        for(int i = 0; i < (int)alquileres->cantidad_elementos_actual; i++)
+        {
+            fprintf(pfAlquiler, "%ld; %d; %d\n", (vecA+ i)->dni, (vecA + i)->idPeli, (vecA + i)->cantAlquileres);
+
+        }
+        fclose(pfAlquiler);
+        printf("Archivo %s actualizado\n", nombreAlquiler);
     }
 }

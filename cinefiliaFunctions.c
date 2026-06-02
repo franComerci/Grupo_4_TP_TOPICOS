@@ -69,13 +69,18 @@ void limpiar_buffer()
 // ============================================================
 int AltaMiembros(t_indice *indice, t_fecha fProc)
 {
-    t_miembros aux;
-    memset(&aux, 0, sizeof(t_miembros));
+    t_miembros aux = {0};
 
     // DNI
     printf("DNI: ");
-    if (scanf("%ld", &aux.dni) != 1) { fflush(stdin); return ERROR; }
-    fflush(stdin);
+    if (scanf("%ld", &aux.dni) != 1)
+    {
+        //fflush(stdin);
+        limpiar_buffer();
+        return ERROR;
+    }
+    limpiar_buffer();
+    //fflush(stdin);
 
     if (validarDni(aux.dni) != EXITO)
     {
@@ -97,7 +102,8 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     // Fecha de nacimiento
     printf("Fecha de nacimiento (DD/MM/AAAA): ");
     scanf(" %d/%d/%d", &aux.fnac.d, &aux.fnac.m, &aux.fnac.a);
-    fflush(stdin);
+    //fflush(stdin);
+    limpiar_buffer();
     if (validarFechaNac(&aux.fnac, &fProc) != EXITO)
     {
         puts("Fecha de nacimiento invalida o edad menor a 10. Operacion cancelada.");
@@ -107,7 +113,8 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     // Sexo
     printf("Sexo (M/F/O): ");
     scanf(" %c", &aux.sexo);
-    fflush(stdin);
+    //fflush(stdin);
+    limpiar_buffer();
     aux.sexo = miToUpper(aux.sexo);
     if (validarSexo(aux.sexo) != EXITO)
     {
@@ -116,25 +123,8 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     }
 
     // Fecha de afiliacion
-    printf("Fecha de afiliacion (DD/MM/AAAA): ");
-    scanf(" %d/%d/%d", &aux.fechaAfiliacion.d, &aux.fechaAfiliacion.m, &aux.fechaAfiliacion.a);
-    fflush(stdin);
-    if (validarFechaAfil(&aux.fechaAfiliacion, &aux.fnac, &fProc) != EXITO)
-    {
-        puts("Fecha de afiliacion invalida. Operacion cancelada.");
-        return ERROR;
-    }
-
-    // Ultima cuota
-    printf("Fecha ultima cuota pagada (DD/MM/AAAA): ");
-    scanf(" %d/%d/%d", &aux.ultimaCuota.d, &aux.ultimaCuota.m, &aux.ultimaCuota.a);
-    fflush(stdin);
-    if (validarUltimaCuota(&aux.ultimaCuota, &aux.fechaAfiliacion, &fProc) != EXITO)
-    {
-        puts("Fecha de ultima cuota invalida. Operacion cancelada.");
-        return ERROR;
-    }
-
+    aux.fechaAfiliacion = fProc;
+    aux.ultimaCuota = fProc;
     // Estado inicial = 'A'
     aux.estado = 'A';
 
@@ -142,7 +132,8 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     printf("Plan:\n  1. BASIC\n  2. PREMIUM\n  3. VIP\n  4. FAMILY\nOpcion: ");
     int opPlan;
     scanf("%d", &opPlan);
-    fflush(stdin);
+    //fflush(stdin);
+    limpiar_buffer();
     switch (opPlan)
     {
         case 1: strcpy(aux.plan, "BASIC");   break;
@@ -195,15 +186,17 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
 // ============================================================
 int AltaTitulo(t_indice *indice)
 {
-    t_pelis aux;
-    memset(&aux, 0, sizeof(t_pelis));
+    t_pelis aux = {0};
+
     int i;
 
     // ID autoincremental
     int maxId = 0;
     t_pelis *arr = (t_pelis *)indice->vindice;
     for (i = 0; i < (int)indice->cantidad_elementos_actual; i++)
-        if (arr[i].idPeli > maxId) maxId = arr[i].idPeli;
+        if ((arr+i)->idPeli > maxId)
+            maxId = (arr+i)->idPeli;
+
     aux.idPeli = maxId + 1;
     printf("ID asignado: %d\n", aux.idPeli);
 
@@ -230,7 +223,8 @@ int AltaTitulo(t_indice *indice)
     // Stock
     printf("Stock inicial (>= 0): ");
     scanf("%d", &aux.stock);
-    fflush(stdin);
+    //fflush(stdin);
+    limpiar_buffer();
     if (validarStock(aux.stock) != EXITO)
     {
         puts("Stock invalido. Operacion cancelada.");
@@ -252,8 +246,7 @@ int AltaTitulo(t_indice *indice)
 // ============================================================
 int BajaMiembros(t_indice *indice, long dniBorrar)
 {
-    t_miembros aux;
-    memset(&aux, 0, sizeof(t_miembros));
+    t_miembros aux = {0};
     aux.dni = dniBorrar;
 
     int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
@@ -265,13 +258,13 @@ int BajaMiembros(t_indice *indice, long dniBorrar)
     }
 
     t_miembros *arr = (t_miembros *)indice->vindice;
-    if (arr[pos].estado == 'B')
+    if ((arr + pos)->estado == 'B')
     {
         printf("El miembro %ld ya estaba dado de baja.\n", dniBorrar);
         return ERROR;
     }
 
-    arr[pos].estado = 'B';
+    (arr + pos)->estado = 'B';
     indice_eliminar(indice, &aux, sizeof(t_miembros), comparar_dni);
 
     printf("Miembro %ld dado de baja correctamente.\n", dniBorrar);
@@ -283,8 +276,7 @@ int BajaMiembros(t_indice *indice, long dniBorrar)
 // ============================================================
 int BajaTitulo(t_indice *indice, int idBorrar)
 {
-    t_pelis aux;
-    memset(&aux, 0, sizeof(t_pelis));
+    t_pelis aux = {0};
     aux.idPeli = idBorrar;
 
     int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
@@ -307,11 +299,16 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
 {
     long dniModif;
     printf("DNI del miembro a modificar: ");
-    if (scanf("%ld", &dniModif) != 1) { fflush(stdin); return ERROR; }
-    fflush(stdin);
+    if (scanf("%ld", &dniModif) != 1)
+    {
+        //fflush(stdin);
+        limpiar_buffer();
+        return ERROR;
+    }
+    //fflush(stdin);
+    limpiar_buffer();
 
-    t_miembros aux;
-    memset(&aux, 0, sizeof(t_miembros));
+    t_miembros aux = {0};
     aux.dni = dniModif;
 
     int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
@@ -334,7 +331,8 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
         printf("4. Cancelar\n");
         printf("Opcion: ");
         scanf("%d", &opcion);
-        fflush(stdin);
+        limpiar_buffer();
+        //fflush(stdin);
 
         switch (opcion)
         {
@@ -385,11 +383,16 @@ int ModificarTitulo(t_indice *indice)
 {
     int idModif;
     printf("ID del titulo a modificar: ");
-    if (scanf("%d", &idModif) != 1) { fflush(stdin); return ERROR; }
-    fflush(stdin);
+    if (scanf("%d", &idModif) != 1)
+    {
+        limpiar_buffer();
+        //fflush(stdin);
+        return ERROR;
+    }
+    //fflush(stdin);
+    limpiar_buffer();
 
-    t_pelis aux;
-    memset(&aux, 0, sizeof(t_pelis));
+    t_pelis aux = {0};
     aux.idPeli = idModif;
 
     int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
@@ -413,8 +416,8 @@ int ModificarTitulo(t_indice *indice)
         printf("5. Cancelar\n");
         printf("Opcion: ");
         scanf("%d", &opcion);
-        fflush(stdin);
-
+        //fflush(stdin);
+        limpiar_buffer();
         switch (opcion)
         {
             case 1:
@@ -446,7 +449,8 @@ int ModificarTitulo(t_indice *indice)
                 int nuevoStock;
                 printf("Nuevo stock: ");
                 scanf("%d", &nuevoStock);
-                fflush(stdin);
+                //fflush(stdin);
+                limpiar_buffer();
                 if (validarStock(nuevoStock) == EXITO)
                     p->stock = nuevoStock;
                 else
@@ -474,11 +478,16 @@ void MostrarInfoMiembro(t_indice *indice)
 {
     long dni;
     printf("DNI del miembro a consultar: ");
-    if (scanf("%ld", &dni) != 1) { fflush(stdin); return; }
-    fflush(stdin);
+    if (scanf("%ld", &dni) != 1)
+    {
+        //fflush(stdin);
+        limpiar_buffer();
+        return;
+    }
+    //fflush(stdin);
+    limpiar_buffer();
 
-    t_miembros aux;
-    memset(&aux, 0, sizeof(t_miembros));
+    t_miembros aux = {0};
     aux.dni = dni;
 
     int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
@@ -520,8 +529,8 @@ void AlquilerPeli(t_indice *miembro, t_indice *peli, t_indice *alquileres, const
     scanf("%ld", &auxMiembros.dni);
     printf("Ingresar ID del titulo: ");
     scanf("%d", &auxPelis.idPeli);
-    fflush(stdin);
-    //limpiar_buffer();
+    //fflush(stdin);
+    limpiar_buffer();
 
     int posMiembro = indice_buscar(miembro,&auxMiembros, miembro->cantidad_elementos_actual, sizeof(t_miembros), comparar_dni);
     int posPeli = indice_buscar(peli,&auxPelis, peli->cantidad_elementos_actual, sizeof(t_pelis), comparar_id_peli);
@@ -568,15 +577,12 @@ void AlquilerPeli(t_indice *miembro, t_indice *peli, t_indice *alquileres, const
 
     int posAlq = indice_buscar(alquileres,&auxAlquiler, alquileres->cantidad_elementos_actual, sizeof(t_alquiler), comparar_alquiler);
 
-    int flag = 0;
-
     if(posAlq != NO_EXISTE)
     {
         t_alquiler *vecAlquiler = (t_alquiler*)alquileres->vindice;
         (vecAlquiler + posAlq)->cantAlquileres ++;
         printf("El miembro %ld ya alquilo el titulo %d %d veces \n", auxAlquiler.dni, auxAlquiler.idPeli, (vecAlquiler + posAlq)->cantAlquileres);
 
-        flag = 1;
     }
     else
     {
@@ -584,33 +590,9 @@ void AlquilerPeli(t_indice *miembro, t_indice *peli, t_indice *alquileres, const
         if (indice_insertar(alquileres, &auxAlquiler, sizeof(t_alquiler), comparar_alquiler) == OK)
         {
             printf("Cantidad de alquileres de %ld: %d\n", auxAlquiler.dni, auxAlquiler.cantAlquileres);
-            flag = 1;
         }
         else
             puts("error de memoria al registrar el alquiler");
-    }
-
-    //lo paso todo a un archivo alquileres.csv
-    if(flag)
-    {
-        char nombArchAlquiler[50];
-        sprintf(nombArchAlquiler, "alquiler_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
-        FILE *archAlq = fopen(nombArchAlquiler, "w");
-        if(archAlq)
-        {
-
-
-            fprintf(archAlq, "DNI;ID_PELI;CANT_ALQUILERES\n");
-            t_alquiler *vec = (t_alquiler*)alquileres->vindice;
-
-            for(int i = 0; i < alquileres->cantidad_elementos_actual; i++)
-            {
-                fprintf(archAlq, "%ld; %d; %d\n", (vec + i)->dni, (vec + i)->idPeli, (vec+i)->cantAlquileres);
-
-            }
-            fclose(archAlq);
-            puts("alquileres.csv actualizado");
-        }
     }
 }
 

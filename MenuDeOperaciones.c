@@ -31,7 +31,8 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquilere
     {
         MostrarMenu();
         scanf(" %c", &opcion);
-        fflush(stdin);
+        //fflush(stdin);
+        limpiar_buffer();
         opcion = miToUpper(opcion);
         switch (opcion)
         {
@@ -48,7 +49,8 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquilere
             long dni;
             printf("DNI del miembro a dar de baja: ");
             scanf("%ld", &dni);
-            fflush(stdin);
+            limpiar_buffer();
+            //fflush(stdin);
             BajaMiembros(indMiembros, dni);
             break;
         }
@@ -58,7 +60,8 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquilere
             int id;
             printf("ID del titulo a dar de baja: ");
             scanf("%d", &id);
-            fflush(stdin);
+            limpiar_buffer();
+            //fflush(stdin);
             BajaTitulo(indPelis, id);
             break;
         }
@@ -93,8 +96,9 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquilere
             break;
 
         case 'K':
-            puts("\nCerrando programa...");
+            puts("\nCerrando programa y actualizando archivos...");
             // grabado(); GRABANDO EN ARCHIVOS NO REALIZADO HACER
+            guardarDatos(indMiembros,indPelis,alquileres, fProc);
             break;
 
         default:
