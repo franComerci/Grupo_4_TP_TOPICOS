@@ -2,7 +2,7 @@
 
 void MostrarMenu()
 {
-    printf("\n=========================================\n");
+    printf("\n=========================================\n"); 
     printf("         CINEFILIA - MENU PRINCIPAL      \n");
     printf("=========================================\n");
     printf("A. Alta de un Miembro\n");
