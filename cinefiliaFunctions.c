@@ -278,7 +278,6 @@ int BajaTitulo(t_indice *indice, int idBorrar)
 {
     t_pelis aux = {0};
     aux.idPeli = idBorrar;
-
     int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
                             sizeof(t_pelis), comparar_id_peli);
     if (pos == NO_EXISTE)
@@ -288,7 +287,17 @@ int BajaTitulo(t_indice *indice, int idBorrar)
     }
 
     indice_eliminar(indice, &aux, sizeof(t_pelis), comparar_id_peli);
+
     printf("Titulo con ID %d dado de baja correctamente.\n", idBorrar);
+
+    puts("Actualizar los ID siguientes");
+    t_pelis *vecPelis = (t_pelis*)indice->vindice;
+
+    for(int i = pos; i < (int)indice->cantidad_elementos_actual; i++)
+    {
+        (vecPelis + i)->idPeli --;
+    }
+
     return OK;
 }
 
@@ -319,7 +328,7 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
         return ERROR;
     }
 
-    t_miembros *m = &((t_miembros *)indice->vindice)[pos];
+    t_miembros *m = (t_miembros *)indice->vindice+ pos;
 
     int opcion;
     do

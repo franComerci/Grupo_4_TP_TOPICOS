@@ -1,16 +1,13 @@
 ID_PELI;TITULO;GENERO;STOCK
-1;El Padrino;Drama;0
-2;Terminator;Accion;0
-3;La La Land;Comedia;2
-4;El Conjuro;Terror;3
-5;Forrest Gump;Drama;3
-6;Duro De Matar;Accion;2
-7;El Gran Lebowski;Comedia;1
-9;Schindler;Drama;1
-10;Mad Max;Accion;3
-11;Superbad;Comedia;1
-12;Hereditary;Terror;0
-13;Interstellar;Drama;2
-14;John Wick;Accion;3
-15;Los Simuladores;Comedia;0
-16;Los Increibles;Accion;2
+1;Terminator;Accion;0
+2;La La Land;Comedia;2
+3;Forrest Gump;Drama;3
+4;Duro De Matar;Accion;2
+5;El Gran Lebowski;Comedia;1
+7;Schindler;Drama;1
+8;Mad Max;Accion;3
+9;Superbad;Comedia;1
+10;Hereditary;Terror;0
+11;John Wick;Accion;3
+12;Los Simuladores;Comedia;0
+13;Los Increibles;Accion;2
