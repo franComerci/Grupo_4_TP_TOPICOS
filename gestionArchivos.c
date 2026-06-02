@@ -164,8 +164,8 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_fecha fProc,const 
         fgets(linea, REG, fMiembros); // saltar header
         while (fgets(linea, REG, fMiembros))
         {
-            t_miembros m;
-            memset(&m, 0, sizeof(t_miembros));/// ARREGLAR
+            t_miembros m = {0};
+
             if (procesarMiembro(linea, &m, fProc) == EXITO)
             {
                 if (indice_insertar(indMiembros, &m, sizeof(t_miembros), comparar_dni) == OK)

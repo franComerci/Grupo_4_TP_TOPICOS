@@ -520,7 +520,8 @@ void AlquilerPeli(t_indice *miembro, t_indice *peli, t_indice *alquileres, const
     scanf("%ld", &auxMiembros.dni);
     printf("Ingresar ID del titulo: ");
     scanf("%d", &auxPelis.idPeli);
-    limpiar_buffer();
+    fflush(stdin);
+    //limpiar_buffer();
 
     int posMiembro = indice_buscar(miembro,&auxMiembros, miembro->cantidad_elementos_actual, sizeof(t_miembros), comparar_dni);
     int posPeli = indice_buscar(peli,&auxPelis, peli->cantidad_elementos_actual, sizeof(t_pelis), comparar_id_peli);
@@ -543,11 +544,21 @@ void AlquilerPeli(t_indice *miembro, t_indice *peli, t_indice *alquileres, const
     (vecPelis + posPeli)->stock -= 1; //Actualizo el stock en memoria
 
     //Actualizo stock en el archivo
-    FILE *arch = fopen(NombreArchPelis, "r+b");
+    FILE *arch = fopen(NombreArchPelis, "w"); // "w" limpia el archivo para reescribirlo de cero
     if(arch)
     {
-        fseek(arch, posPeli*sizeof(t_pelis), 0);
-        fwrite((vecPelis + posPeli), sizeof(t_pelis),1, arch);
+        // Escribimos el encabezado oficial
+        fprintf(arch, "IDPelicula;Titulo;Genero;Stock\n");
+
+        // Recorremos el vector en RAM y escribimos linea por linea con punto y coma
+        for(int i = 0; i < (int)peli->cantidad_elementos_actual; i++)
+        {
+            fprintf(arch, "%d;%s;%s;%d\n",
+                    (vecPelis + i)->idPeli,
+                    (vecPelis + i)->titulo,
+                    (vecPelis + i)->genero,
+                    (vecPelis + i)->stock);
+        }
         fclose(arch);
     }
 

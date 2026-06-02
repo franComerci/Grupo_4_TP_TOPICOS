@@ -2,7 +2,7 @@
 
 void MostrarMenu()
 {
-    printf("\n=========================================\n"); 
+    printf("\n=========================================\n");
     printf("         CINEFILIA - MENU PRINCIPAL      \n");
     printf("=========================================\n");
     printf("A. Alta de un Miembro\n");
@@ -77,7 +77,7 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquilere
 
         case 'H':
             //AlquilarTitulo(indMiembros, indPelis, alquileres); /// FALTA HACER
-            AlquilerPeli(indMiembros, indPelis, alquileres, "peliculas.csv",fProc);
+            AlquilerPeli(indMiembros, indPelis, alquileres, PATH_TITULOS,fProc);
             break;
 
         case 'I':
