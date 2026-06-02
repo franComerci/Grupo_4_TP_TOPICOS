@@ -1,4 +1,4 @@
-#include "cinefiliaFunctions.h"
+#include "cinefiliaHeader.h"
 
 //funciones de fechas
 void ingresarFecha(t_fecha *f)
@@ -115,3 +115,4 @@ int diaDeLaSemana(t_fecha *f)
     t_fecha referencia = {7, 1, 1990}; // Fue domingo
     return diferenciaEntreFechas(&referencia, f) % 7; // Domingo = 0, Lunes = 1, etc.
 }
+

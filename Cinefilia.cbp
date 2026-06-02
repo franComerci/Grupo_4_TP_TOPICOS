@@ -34,39 +34,15 @@
 		<Unit filename="FuncionesNormalizar.c">
 			<Option compilerVar="CC" />
 		</Unit>
-<<<<<<< HEAD
 		<Unit filename="MenuDeOperaciones.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="TDA_FECHA.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="TDA_VECTOR.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="Validaciones.c">
 			<Option compilerVar="CC" />
 		</Unit>
-=======
-		<Unit filename="FuncionesNormalizar.h" />
-		<Unit filename="Indices.h" />
-		<Unit filename="MenuDeOperaciones.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="MenuDeOperaciones.h" />
-		<Unit filename="TDA_FECHA.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="TDA_FECHA.h" />
-		<Unit filename="TDA_VECTOR.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="TDA_VECTOR.h" />
-		<Unit filename="Validaciones.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="Validaciones.h" />
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 		<Unit filename="cinefiliaFunctions.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -74,18 +50,12 @@
 		<Unit filename="gestionArchivos.c">
 			<Option compilerVar="CC" />
 		</Unit>
-<<<<<<< HEAD
-=======
-		<Unit filename="gestionArchivos.h" />
->>>>>>> a98f1e4cfaae65484fd44e121ef105cbc94cf33c
 		<Unit filename="indices.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Extensions>
-			<lib_finder disable_auto="1" />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -2,123 +2,93 @@
 
 t_fecha parsear_fecha(const char *cad)
 {
-    t_fecha f = {0, 0, 0}; //f.d = 0, f.m = 0, f.a = 0
-
-    if(cad == NULL ||*cad == '\0')
+    t_fecha f = {0, 0, 0};
+    if (cad == NULL || *cad == '\0')
         return f;
-
     sscanf(cad, "%d/%d/%d", &f.d, &f.m, &f.a);
     return f;
 }
 
+// Formato: DNI;NyA;FechaNac;Sexo;FechaAfil;UltCuota;Estado;Plan;EmailTutor
 void trozado(char *linea, t_miembros *m)
 {
     char *act = strchr(linea, '\n');
-    if (act)
-        *act = '\0';
-    //emailTutor
+    if (act) *act = '\0';
+    act = strchr(linea, '\r');
+    if (act) *act = '\0';
+
+    // EmailTutor
     act = strrchr(linea, ';');
     strcpy(m->emailTutor, act + 1);
     *act = '\0';
 
-    //plan
+    // Plan
     act = strrchr(linea, ';');
     strcpy(m->plan, act + 1);
     *act = '\0';
 
-    //estado
+    // Estado
     act = strrchr(linea, ';');
     m->estado = *(act + 1);
     *act = '\0';
 
-    // ultima fecha paga
+    // Ultima cuota
     act = strrchr(linea, ';');
     m->ultimaCuota = parsear_fecha(act + 1);
     *act = '\0';
 
-    // fecha afiliacion
+    // Fecha afiliacion
     act = strrchr(linea, ';');
     m->fechaAfiliacion = parsear_fecha(act + 1);
     *act = '\0';
 
-    // sexo
-    act = strrchr(linea,';');
+    // Sexo
+    act = strrchr(linea, ';');
     m->sexo = *(act + 1);
     *act = '\0';
 
-    // fecha nacimiento
+    // Fecha nacimiento
     act = strrchr(linea, ';');
     m->fnac = parsear_fecha(act + 1);
     *act = '\0';
 
-    //nombre y apellido
+    // Nombre y apellido
     act = strrchr(linea, ';');
     strcpy(m->nya, act + 1);
     *act = '\0';
 
-    //dni
-    m->dni = strtol(linea, NULL, 10); //STRTOL = string to long
+    // DNI
+    m->dni = strtol(linea, NULL, 10);
 
-    //cuil y categoria van a quedar con basura
+    // cuil y categoria se calculan despues
 }
 
-void leerArchivo(FILE *archivo, t_vector *vecMiembros, t_fecha fechaProceso)
+// Trozado de una linea CSV de peliculas
+// Formato: IDPelicula;Titulo;Genero;Stock
+void trozado_peli(char *linea, t_pelis *p)
 {
-    t_miembros miembro;
-    char registro[REG];
-    if(archivo == NULL)
-    {
-        printf("error con el archivo\n");
-         return;
-    }
-    fgets(registro,sizeof(registro),archivo);
+    char *act = strchr(linea, '\n');
+    if (act) *act = '\0';
+    act = strchr(linea, '\r');
+    if (act) *act = '\0';
 
-    while (fgets(registro,sizeof(registro),archivo) != NULL)
-    {
+    // Stock
+    act = strrchr(linea, ';');
+    p->stock = atoi(act + 1);
+    *act = '\0';
 
-        if(procesarMiembro(registro, &miembro, fechaProceso) == EXITO)
-        {
-            if(vector_insertar(vecMiembros, miembro) == ERROR_MEMORIA)
-            {
-                puts("error de memoria\n");
-                return;
-            }
-        }
+    // Genero
+    act = strrchr(linea, ';');
+    strcpy(p->genero, act + 1);
+    *act = '\0';
 
-    }
-}
+    // Titulo
+    act = strrchr(linea, ';');
+    strcpy(p->titulo, act + 1);
+    *act = '\0';
 
-void mostrarArchivoMiembros(const char *pathArch)
-{
-    FILE *pf = fopen(pathArch, "rb");
-    if (pf == NULL)
-    {
-        printf("Error: No se pudo abrir el archivo %s\n", pathArch);
-        return;
-    }
-    t_miembros reg;
-    printf("\n=========================================================================================================\n");
-    printf("%-11s | %-15s | %-25s | %s | %-7s | %c | %-8s | %-30s\n",
-           "DNI", "CUIL", "NOMBRE Y APELLIDO", "F.NAC", "CAT", "E", "PLAN", "EMAIL TUTOR");
-    printf("=========================================================================================================\n");
-    while (fread(&reg, sizeof(t_miembros), 1, pf) == 1)
-    {
-        printf("%-11ld | %-15s | %-25s | %02d/%02d/%04d | %-7s | %c | %-8s | ",
-               reg.dni,
-               reg.cuil,
-               reg.nya,
-               reg.fnac.d, reg.fnac.m, reg.fnac.a,
-               reg.categoria,
-               reg.estado,
-               reg.plan);
-
-        if (strcmp(reg.categoria, "MENOR") == 0)
-            printf("%-30s\n", reg.emailTutor);
-        else
-            printf("%-30s\n", "");
-    }
-    printf("=========================================================================================================\n\n");
-    fclose(pf);
+    // ID
+    p->idPeli = atoi(linea);
 }
 
 int procesarMiembro(char *registro, t_miembros *miembro, t_fecha fechaProceso)
@@ -127,17 +97,34 @@ int procesarMiembro(char *registro, t_miembros *miembro, t_fecha fechaProceso)
     normalizarNombre(miembro->nya);
 
     char *cuil = crearCuil(miembro->dni, miembro->sexo);
-    if(cuil != NULL)
+    if (cuil != NULL)
     {
         strcpy(miembro->cuil, cuil);
+        free(cuil);
     }
-    if(validarDni(miembro->dni) != EXITO || validarSexo(miembro->sexo) != EXITO || validarFechaNac(&miembro->fnac, &fechaProceso) != EXITO ||
-        validarFechaAfil(&miembro->fechaAfiliacion, &miembro->fnac, &fechaProceso) != EXITO || validarUltimaCuota(&miembro->ultimaCuota, &miembro->fechaAfiliacion, &fechaProceso) != EXITO) // falta agregar las validaciones de fecha
-            return ERROR_VALID;
+
+    if (validarDni(miembro->dni)                                                         != EXITO)
+        return ERROR_VALID;
+    if (validarSexo(miembro->sexo)                                                       != EXITO)
+        return ERROR_VALID;
+    if (validarFechaNac(&miembro->fnac, &fechaProceso)                                   != EXITO)
+        return ERROR_VALID;
+    if (validarFechaAfil(&miembro->fechaAfiliacion, &miembro->fnac, &fechaProceso)       != EXITO)
+        return ERROR_VALID;
+    if (validarUltimaCuota(&miembro->ultimaCuota, &miembro->fechaAfiliacion, &fechaProceso) != EXITO)
+        return ERROR_VALID;
+    if (valEmailTut(miembro->emailTutor, &miembro->fnac, &fechaProceso)                  != EXITO)
+        return ERROR_VALID;
+    if(validarPlan(miembro->plan)!= EXITO)
+        return ERROR_VALID;
 
 
+    // Calcular categoria
     int edad = fechaProceso.a - miembro->fnac.a;
-    if(edad < 18)
+    if (fechaProceso.m < miembro->fnac.m ||
+            (fechaProceso.m == miembro->fnac.m && fechaProceso.d < miembro->fnac.d))
+        edad--;
+    if (edad < 18)
         strcpy(miembro->categoria, "MENOR");
     else
         strcpy(miembro->categoria, "ADULTO");
@@ -145,3 +132,117 @@ int procesarMiembro(char *registro, t_miembros *miembro, t_fecha fechaProceso)
     return EXITO;
 }
 
+int procesarPelicula(char *registro, t_pelis *peli)
+{
+    trozado_peli(registro, peli);
+    normalizarNomPel(peli->titulo);
+    normalizarNomPel(peli->genero);
+
+    if (peli->idPeli <= 0)            return ERROR_VALID;
+    if (validarGenero(peli->genero)  != EXITO) return ERROR_VALID;
+    if (validarStock(peli->stock)    != EXITO) return ERROR_VALID;
+
+    return EXITO;
+}
+
+// Carga los dos CSV en sus respectivos indices
+void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_fecha fProc,const char *pathMiembros, const char *pathPelis)
+{
+    char linea[REG];
+    int cargados, errores;
+
+    // --- Miembros ---
+    FILE *fMiembros = fopen(pathMiembros, "r");
+    if (!fMiembros)
+    {
+        printf("Advertencia: no se pudo abrir %s\n", pathMiembros);
+    }
+    else
+    {
+        cargados = 0;
+        errores  = 0;
+        fgets(linea, REG, fMiembros); // saltar header
+        while (fgets(linea, REG, fMiembros))
+        {
+            t_miembros m;
+            memset(&m, 0, sizeof(t_miembros));/// ARREGLAR
+            if (procesarMiembro(linea, &m, fProc) == EXITO)
+            {
+                if (indice_insertar(indMiembros, &m, sizeof(t_miembros), comparar_dni) == OK)
+                    cargados++;
+                else
+                    errores++;
+            }
+            else
+                errores++;
+        }
+        fclose(fMiembros);
+        printf("Miembros cargados: %d  |  Errores: %d\n", cargados, errores);
+    }
+
+    // --- Peliculas ---
+    FILE *fPelis = fopen(pathPelis, "r");
+    if (!fPelis)
+    {
+        printf("Advertencia: no se pudo abrir %s\n", pathPelis);
+    }
+    else
+    {
+        cargados = 0;
+        errores  = 0;
+        fgets(linea, REG, fPelis); // saltar header
+        while (fgets(linea, REG, fPelis))
+        {
+            t_pelis p;
+            memset(&p, 0, sizeof(t_pelis));
+            if (procesarPelicula(linea, &p) == EXITO)
+            {
+                if (indice_insertar(indPelis, &p, sizeof(t_pelis), comparar_id_peli) == OK)
+                    cargados++;
+                else
+                    errores++;
+            }
+            else
+                errores++;
+        }
+        fclose(fPelis);
+        printf("Titulos cargados: %d  |  Errores: %d\n", cargados, errores);
+    }
+}
+
+void MostrarArchivos(t_indice *indMiembros, t_indice *indPelis)
+{
+    t_miembros *arrM = (t_miembros *)indMiembros->vindice;
+    t_pelis    *arrP = (t_pelis    *)indPelis->vindice;
+
+    printf("\n============== MIEMBROS (%u) ==============\n",
+           indMiembros->cantidad_elementos_actual);
+
+    printf("%-10s %-14s %-30s %-6s %-11s %-11s %-8s %-11s %-10s %-10s %-30s\n",
+           "DNI", "CUIL", "Nombre", "Sexo", "FechaNac", "FechaAfil", "Categoria", "UltimaCuota", "Estado", "Plan", "EmailTutor");
+
+    for (int i = 0; i < (int)indMiembros->cantidad_elementos_actual; i++)
+    {
+        printf("%-10ld %-14s %-30s %-6c %02d/%02d/%04d  %02d/%02d/%04d  %-8s %02d/%02d/%04d  %-9c %-10s %-30s\n",
+               (arrM+i)->dni,
+               (arrM+i)->cuil,
+               (arrM+i)->nya,
+               (arrM+i)->sexo,
+               (arrM+i)->fnac.d,            (arrM+i)->fnac.m,            (arrM+i)->fnac.a,
+               (arrM+i)->fechaAfiliacion.d,  (arrM+i)->fechaAfiliacion.m, (arrM+i)->fechaAfiliacion.a,
+               (arrM+i)->categoria,
+               (arrM+i)->ultimaCuota.d,      (arrM+i)->ultimaCuota.m,     (arrM+i)->ultimaCuota.a,
+               (arrM+i)->estado,
+               (arrM+i)->plan,
+               (arrM+i)->emailTutor);
+    }
+    printf("\n============== TITULOS (%u) ==============\n",
+           indPelis->cantidad_elementos_actual);
+    printf("%-5s %-35s %-12s %-5s\n","ID","Titulo","Genero","Stock");
+
+    for (int i = 0; i < (int)indPelis->cantidad_elementos_actual; i++)
+    {
+        printf("%-5d %-35s %-12s %-5d\n",
+               (arrP+i)->idPeli, (arrP+i)->titulo, (arrP+i)->genero, (arrP+i)->stock);
+    }
+}
