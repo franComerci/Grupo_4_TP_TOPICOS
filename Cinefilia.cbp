@@ -31,6 +31,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Auditoria.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="FuncionesNormalizar.c">
 			<Option compilerVar="CC" />
 		</Unit>

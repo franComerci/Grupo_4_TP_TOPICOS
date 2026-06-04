@@ -4,7 +4,7 @@ void MostrarMenu()
 {
     printf("\n=========================================\n");
     printf("         CINEFILIA - MENU PRINCIPAL      \n");
-    printf("=========================================\n");
+    printf("===========================================\n");
     printf("A. Alta de un Miembro\n");
     printf("B. Alta de un Titulo\n");
     printf("C. Baja de un Miembro\n");
@@ -14,93 +14,111 @@ void MostrarMenu()
     printf("G. Mostrar Informacion de un Miembro\n");
     printf("H. Alquiler de un Titulo\n");
     printf("I. Listado de Miembros Ordenados por DNI\n");
-    printf("J. Listado de Miembros Por Plan (Ordenados por nombre)\n");
+    printf("J. Listado de Miembros Por Plan\n");
     printf("L. Mostrar todos los registros\n");
     printf("K. Salir\n");
     printf("=========================================\n");
     printf("Opcion: ");
 }
 
-void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquileres, t_indice *indAuditoria,t_fecha fProc, const char *pathMiembros, const char *pathPelis,const char *pathAlq)
+// ================================================================
+//  EjecutarMenu
+//  Recibe la t_auditoria (matriz operacion x entidad) y el
+//  indErrores (errores de carga) por separado.
+// ================================================================
+void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis,
+                  t_indice *alquileres,
+                  t_auditoria *auditoria, t_indice *indErrores,
+                  t_fecha fProc,
+                  const char *pathMiembros, const char *pathPelis,
+                  const char *pathAlq)
 {
-    // Cargar datos desde CSV al inicio
-    cargarDatos(indMiembros, indPelis, indAuditoria, fProc, pathMiembros, pathPelis);// SUBE EL CSV A LOS INDICES
+    // Carga los CSV; los errores van al indice indErrores
+    cargarDatos(indMiembros, indPelis, indErrores, fProc,
+                pathMiembros, pathPelis);
 
     char opcion;
     do
     {
         MostrarMenu();
         scanf(" %c", &opcion);
-        //fflush(stdin);
         limpiar_buffer();
         opcion = miToUpper(opcion);
+
         switch (opcion)
         {
+        // ---- Altas ----
         case 'A':
-            AltaMiembros(indMiembros, fProc);
+            audi_registrar(auditoria, ALTA, ENT_MIEMBROS,
+                           AltaMiembros(indMiembros, fProc));
             break;
-
         case 'B':
-            AltaTitulo(indPelis);
+            audi_registrar(auditoria, ALTA, ENT_PELIS,
+                           AltaTitulo(indPelis));
             break;
 
+        // ---- Bajas ----
         case 'C':
         {
             long dni;
             printf("DNI del miembro a dar de baja: ");
             scanf("%ld", &dni);
             limpiar_buffer();
-            //fflush(stdin);
-            BajaMiembros(indMiembros, dni);
+            audi_registrar(auditoria, BAJA, ENT_MIEMBROS,
+                           BajaMiembros(indMiembros, dni));
             break;
         }
-
         case 'D':
         {
             int id;
             printf("ID del titulo a dar de baja: ");
             scanf("%d", &id);
             limpiar_buffer();
-            //fflush(stdin);
-            BajaTitulo(indPelis, id);
+            audi_registrar(auditoria, BAJA, ENT_PELIS,
+                           BajaTitulo(indPelis, id));
             break;
         }
 
+        // ---- Modificaciones ----
         case 'E':
-            ModificarMiembro(indMiembros, fProc);
+            audi_registrar(auditoria, MODIFICACION, ENT_MIEMBROS,
+                           ModificarMiembro(indMiembros, fProc));
             break;
-
         case 'F':
-            ModificarTitulo(indPelis);
+            audi_registrar(auditoria, MODIFICACION, ENT_PELIS,
+                           ModificarTitulo(indPelis));
             break;
 
+        // ---- Consultas ----
         case 'G':
             MostrarInfoMiembro(indMiembros);
+            audi_registrar(auditoria, CONSULTA, ENT_MIEMBROS, EXITO);
             break;
 
+        // ---- Alquiler ----
         case 'H':
-            //AlquilarTitulo(indMiembros, indPelis, alquileres); /// FALTA HACER
-            AlquilerPeli(indMiembros, indPelis, alquileres, PATH_TITULOS,fProc);
+            AlquilerPeli(indMiembros, indPelis, alquileres,
+                         PATH_TITULOS, fProc);
+            // AlquilerPeli ya imprime sus mensajes; el exito lo
+            // registramos directamente como OK
+            audi_registrar(auditoria, ALTA, ENT_ALQUILERES, OK);
             break;
 
+        // ---- Listados ----
         case 'I':
             ListadoPorDni(indMiembros);
             break;
-
         case 'J':
             ListadoPorPlan(indMiembros);
             break;
-
         case 'L':
             MostrarArchivos(indMiembros, indPelis);
             break;
 
         case 'K':
-            puts("\nCerrando programa y actualizando archivos...");
-            // grabado(); GRABANDO EN ARCHIVOS NO REALIZADO HACER
+            puts("\nCerrando programa...");
             guardarDatos(indMiembros,indPelis,alquileres, fProc);
             break;
-
         default:
             printf("Opcion '%c' invalida. Intente nuevamente.\n", opcion);
             break;
@@ -109,6 +127,9 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquilere
     while (opcion != 'K');
 }
 
+// ================================================================
+//  obtenerFechaProceso  -  sin cambios
+// ================================================================
 t_fecha obtenerFechaProceso()
 {
     t_fecha f;
@@ -116,9 +137,9 @@ t_fecha obtenerFechaProceso()
     printf("\nDesea ingresar la fecha de proceso manualmente? (S/N): ");
     fflush(stdout);
     scanf(" %c", &opcion);
-    while(opcion != 'S' && opcion != 's' && opcion !='N' && opcion != 'n' )
+    while (opcion != 'S' && opcion != 's' && opcion != 'N' && opcion != 'n')
     {
-        printf("Opcion Invalida. Ingresar Nuevamente: ");
+        printf("Opcion invalida. Ingresar nuevamente: ");
         scanf(" %c", &opcion);
     }
     if (opcion == 'S' || opcion == 's')

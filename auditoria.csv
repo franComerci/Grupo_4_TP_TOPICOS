@@ -1,0 +1,13 @@
+Operacion,Entidad,Exitos,Errores
+Alta,Miembros,0,0
+Alta,Pelis,0,0
+Alta,Alquileres,0,0
+Baja,Miembros,0,0
+Baja,Pelis,0,0
+Baja,Alquileres,0,0
+Modificacion,Miembros,0,0
+Modificacion,Pelis,0,0
+Modificacion,Alquileres,0,0
+Consulta,Miembros,0,0
+Consulta,Pelis,0,0
+Consulta,Alquileres,0,0

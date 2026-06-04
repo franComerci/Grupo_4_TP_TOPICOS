@@ -2,45 +2,59 @@
 
 int main()
 {
-    // 1. Obtener fecha de proceso
+    printf("Arrancando...\n");
+    fflush(stdout);
+
     t_fecha fProc = obtenerFechaProceso();
 
-    // 2. Crear indices
-    t_indice indMiembros, indPelis, indAlquileres, indAuditoria;
+    // 2. Indices
+    t_indice indMiembros, indPelis, indAlquileres, indErrores;
+
+    // 2a. Auditoria de operaciones (matriz en memoria, inicializada en 0)
+    t_auditoria auditoria = {0};
 
     if (indice_crear(&indMiembros, CANTIDAD_ELEMENTOS, sizeof(t_miembros)) != OK)
     {
-        puts("Error: no se pudo crear el indice de miembros.");
+        printf("Error: no se pudo crear el indice de miembros.\n");
         return ERROR;
     }
     if (indice_crear(&indPelis, CANTIDAD_ELEMENTOS, sizeof(t_pelis)) != OK)
     {
-        puts("Error: no se pudo crear el indice de titulos.");
+        printf("Error: no se pudo crear el indice de titulos.\n");
         free(indMiembros.vindice);
         return ERROR;
     }
     if (indice_crear(&indAlquileres, CANTIDAD_ELEMENTOS, sizeof(t_alquiler)) != OK)
     {
-        puts("Error: no se pudo crear el indice de alquileres.");
+        printf("Error: no se pudo crear el indice de alquileres.\n");
         free(indMiembros.vindice);
         free(indPelis.vindice);
         return ERROR;
     }
-
-    if(indice_crear(&indAuditoria, CANTIDAD_ELEMENTOS, sizeof(t_auditoria)) != OK)
+    // Indice de errores de carga CSV (t_error_carga, separado de t_auditoria)
+    if (indice_crear(&indErrores, CANTIDAD_ELEMENTOS, sizeof(t_error_carga)) != OK)
     {
-        puts("Error: no se pudo crear la matriz de incidencias.");
+        printf("Error: no se pudo crear el indice de errores.\n");
         free(indMiembros.vindice);
         free(indPelis.vindice);
         free(indAlquileres.vindice);
+        return ERROR;
     }
-    // 3. Ejecutar menu (carga CSV adentro)
-    EjecutarMenu(&indMiembros, &indPelis, &indAlquileres, &indAuditoria,fProc, PATH_MIEMPROS, PATH_TITULOS, PATH_ALQUILERES);
-    // 4. Liberar memoria
+
+    // 3. Menu principal (carga CSVs internamente)
+    EjecutarMenu(&indMiembros, &indPelis, &indAlquileres,&auditoria, &indErrores,fProc, PATH_MIEMPROS, PATH_TITULOS, PATH_ALQUILERES);
+
+    // 4. Guardar auditoria de operaciones del menu → auditoria.csv
+    audi_guardar(&auditoria, "auditoria.csv");
+
+    // 5. Guardar errores de carga CSV → errores_carga.csv
+    errores_guardar(&indErrores, "errores_carga.csv");
+
+    // 6. Liberar memoria
     free(indMiembros.vindice);
     free(indPelis.vindice);
     free(indAlquileres.vindice);
+    free(indErrores.vindice);
 
-    audi_guardar(&indAuditoria,"Incidencias.csv");
     return 0;
 }

@@ -14,8 +14,8 @@ int comparar_dni(const void *a, const void *b)
 
 int comparar_id_peli(const void *a, const void *b)
 {
-    int idA = ((const t_pelis *)a)->idPeli;
-    int idB = ((const t_pelis *)b)->idPeli;
+    int idA = ((t_pelis *)a)->idPeli;
+    int idB = ((t_pelis *)b)->idPeli;
     if (idA < idB) return -1;
     if (idA > idB) return  1;
     return 0;
@@ -38,14 +38,7 @@ int comparar_alquiler(const void *a, const void *b)
     if (x->idPeli > y->idPeli) return  1;
     return 0;
 }
-int comparar_auditoria(const void *a, const void *b)
-{
-    const t_auditoria *aud1 = (const t_auditoria*)a;
-    const t_auditoria *aud2 = (const t_auditoria*)b;
-    if(aud1->dni > aud2->dni) return 1;
-    if(aud1->dni < aud2->dni) return -1;
-    return 0;
-}
+
 // ============================================================
 //  UTILIDADES
 // ============================================================
@@ -82,20 +75,17 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     printf("DNI: ");
     if (scanf("%ld", &aux.dni) != 1)
     {
-        //fflush(stdin);
         limpiar_buffer();
         return ERROR;
     }
     limpiar_buffer();
-    //fflush(stdin);
 
     if (validarDni(aux.dni) != EXITO)
     {
-        puts("DNI fuera de rango. Operacion cancelada.");
+        printf("DNI fuera de rango. Operacion cancelada.");
         return ERROR_DNI_DUP;
     }
-    if (indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
-                      sizeof(t_miembros), comparar_dni) != NO_EXISTE)
+    if (indice_buscar(indice, &aux, indice->cantidad_elementos_actual, sizeof(t_miembros), comparar_dni) != NO_EXISTE)
     {
         printf("El DNI %ld ya existe. Operacion cancelada.\n", aux.dni);
         return ERROR_DUPLICADO;
@@ -109,29 +99,44 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     // Fecha de nacimiento
     printf("Fecha de nacimiento (DD/MM/AAAA): ");
     scanf(" %d/%d/%d", &aux.fnac.d, &aux.fnac.m, &aux.fnac.a);
-    //fflush(stdin);
     limpiar_buffer();
     if (validarFechaNac(&aux.fnac, &fProc) != EXITO)
     {
-        puts("Fecha de nacimiento invalida o edad menor a 10. Operacion cancelada.");
+        printf("Fecha de nacimiento invalida o edad menor a 10. Operacion cancelada.");
         return ERROR;
     }
 
     // Sexo
     printf("Sexo (M/F/O): ");
     scanf(" %c", &aux.sexo);
-    //fflush(stdin);
     limpiar_buffer();
     aux.sexo = miToUpper(aux.sexo);
     if (validarSexo(aux.sexo) != EXITO)
     {
-        puts("Sexo invalido. Operacion cancelada.");
+        printf("Sexo invalido. Operacion cancelada.");
         return ERROR;
     }
 
     // Fecha de afiliacion
-    aux.fechaAfiliacion = fProc;
-    aux.ultimaCuota = fProc;
+    printf("Fecha de afiliacion (DD/MM/AAAA): ");
+    scanf(" %d/%d/%d", &aux.fechaAfiliacion.d, &aux.fechaAfiliacion.m, &aux.fechaAfiliacion.a);
+    limpiar_buffer();
+    if (validarFechaAfil(&aux.fechaAfiliacion, &aux.fnac, &fProc) != EXITO)
+    {
+        printf("Fecha de afiliacion invalida. Operacion cancelada.");
+        return ERROR;
+    }
+
+    // Ultima cuota
+    printf("Fecha ultima cuota pagada (DD/MM/AAAA): ");
+    scanf(" %d/%d/%d", &aux.ultimaCuota.d, &aux.ultimaCuota.m, &aux.ultimaCuota.a);
+    limpiar_buffer();
+    if (validarUltimaCuota(&aux.ultimaCuota, &aux.fechaAfiliacion, &fProc) != EXITO)
+    {
+        printf("Fecha de ultima cuota invalida. Operacion cancelada.");
+        return ERROR;
+    }
+
     // Estado inicial = 'A'
     aux.estado = 'A';
 
@@ -139,17 +144,24 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     printf("Plan:\n  1. BASIC\n  2. PREMIUM\n  3. VIP\n  4. FAMILY\nOpcion: ");
     int opPlan;
     scanf("%d", &opPlan);
-    //fflush(stdin);
     limpiar_buffer();
     switch (opPlan)
     {
-        case 1: strcpy(aux.plan, "BASIC");   break;
-        case 2: strcpy(aux.plan, "PREMIUM"); break;
-        case 3: strcpy(aux.plan, "VIP");     break;
-        case 4: strcpy(aux.plan, "FAMILY");  break;
-        default:
-            puts("Plan invalido. Operacion cancelada.");
-            return ERROR_PLAN;
+    case 1:
+        strcpy(aux.plan, "BASIC");
+        break;
+    case 2:
+        strcpy(aux.plan, "PREMIUM");
+        break;
+    case 3:
+        strcpy(aux.plan, "VIP");
+        break;
+    case 4:
+        strcpy(aux.plan, "FAMILY");
+        break;
+    default:
+        printf("Plan invalido. Operacion cancelada.");
+        return ERROR_PLAN;
     }
 
     // Categoria segun edad
@@ -166,7 +178,7 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
     LeerTexto(aux.emailTutor, MAIL);
     if (valEmailTut(aux.emailTutor, &aux.fnac, &fProc) != EXITO)
     {
-        puts("Email de tutor invalido o faltante para menor. Operacion cancelada.");
+        printf("Email de tutor invalido o faltante para menor. Operacion cancelada.");
         return ERROR_TUTOR;
     }
 
@@ -180,7 +192,7 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
 
     if (indice_insertar(indice, &aux, sizeof(t_miembros), comparar_dni) != OK)
     {
-        puts("Error de memoria al insertar.");
+        printf("Error de memoria al insertar.");
         return ERROR_MEMORIA;
     }
 
@@ -194,16 +206,14 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
 int AltaTitulo(t_indice *indice)
 {
     t_pelis aux = {0};
-
+    //memset(&aux, 0, sizeof(t_pelis));
     int i;
 
     // ID autoincremental
     int maxId = 0;
     t_pelis *arr = (t_pelis *)indice->vindice;
-    for (i = 0; i < (int)indice->cantidad_elementos_actual; i++)
-        if ((arr+i)->idPeli > maxId)
-            maxId = (arr+i)->idPeli;
-
+    for ( i = 0; i < (int)indice->cantidad_elementos_actual; i++)
+        if ((arr + i)->idPeli > maxId) maxId = (arr + i)->idPeli;
     aux.idPeli = maxId + 1;
     printf("ID asignado: %d\n", aux.idPeli);
 
@@ -213,7 +223,7 @@ int AltaTitulo(t_indice *indice)
     normalizarNomPel(aux.titulo);
     if (aux.titulo[0] == '\0')
     {
-        puts("Titulo vacio. Operacion cancelada.");
+        printf("Titulo vacio. Operacion cancelada.");
         return ERROR;
     }
 
@@ -223,24 +233,23 @@ int AltaTitulo(t_indice *indice)
     normalizarNomPel(aux.genero);
     if (validarGenero(aux.genero) != EXITO)
     {
-        puts("Genero invalido. Operacion cancelada.");
+        printf("Genero invalido. Operacion cancelada.");
         return ERROR_GENERO;
     }
 
     // Stock
     printf("Stock inicial (>= 0): ");
     scanf("%d", &aux.stock);
-    //fflush(stdin);
     limpiar_buffer();
     if (validarStock(aux.stock) != EXITO)
     {
-        puts("Stock invalido. Operacion cancelada.");
+        printf("Stock invalido. Operacion cancelada.");
         return ERROR_STOCK;
     }
 
     if (indice_insertar(indice, &aux, sizeof(t_pelis), comparar_id_peli) != OK)
     {
-        puts("Error de memoria al insertar.");
+        printf("Error de memoria al insertar.");
         return ERROR_MEMORIA;
     }
 
@@ -255,25 +264,20 @@ int BajaMiembros(t_indice *indice, long dniBorrar)
 {
     t_miembros aux = {0};
     aux.dni = dniBorrar;
-
-    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
-                            sizeof(t_miembros), comparar_dni);
+    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual, sizeof(t_miembros), comparar_dni);
     if (pos == NO_EXISTE)
     {
         printf("DNI %ld no encontrado.\n", dniBorrar);
         return ERROR;
     }
-
-    t_miembros *arr = (t_miembros *)indice->vindice;
-    if ((arr + pos)->estado == 'B')
+    t_miembros *p = (t_miembros *)indice->vindice + pos;
+    if (p->estado == 'B')
     {
         printf("El miembro %ld ya estaba dado de baja.\n", dniBorrar);
         return ERROR;
     }
-
-    (arr + pos)->estado = 'B';
+    p->estado = 'B';
     indice_eliminar(indice, &aux, sizeof(t_miembros), comparar_dni);
-
     printf("Miembro %ld dado de baja correctamente.\n", dniBorrar);
     return OK;
 }
@@ -285,8 +289,8 @@ int BajaTitulo(t_indice *indice, int idBorrar)
 {
     t_pelis aux = {0};
     aux.idPeli = idBorrar;
-    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
-                            sizeof(t_pelis), comparar_id_peli);
+
+    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual, sizeof(t_pelis), comparar_id_peli);
     if (pos == NO_EXISTE)
     {
         printf("ID %d no encontrado.\n", idBorrar);
@@ -294,17 +298,7 @@ int BajaTitulo(t_indice *indice, int idBorrar)
     }
 
     indice_eliminar(indice, &aux, sizeof(t_pelis), comparar_id_peli);
-
     printf("Titulo con ID %d dado de baja correctamente.\n", idBorrar);
-
-    puts("Actualizar los ID siguientes");
-    t_pelis *vecPelis = (t_pelis*)indice->vindice;
-
-    for(int i = pos; i < (int)indice->cantidad_elementos_actual; i++)
-    {
-        (vecPelis + i)->idPeli --;
-    }
-
     return OK;
 }
 
@@ -317,25 +311,21 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
     printf("DNI del miembro a modificar: ");
     if (scanf("%ld", &dniModif) != 1)
     {
-        //fflush(stdin);
         limpiar_buffer();
         return ERROR;
     }
-    //fflush(stdin);
     limpiar_buffer();
 
-    t_miembros aux = {0};
+    t_miembros aux= {0};
     aux.dni = dniModif;
-
-    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
-                            sizeof(t_miembros), comparar_dni);
+    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual, sizeof(t_miembros), comparar_dni);
     if (pos == NO_EXISTE)
     {
         printf("DNI %ld no encontrado.\n", dniModif);
         return ERROR;
     }
 
-    t_miembros *m = (t_miembros *)indice->vindice+ pos;
+    t_miembros *m = &((t_miembros *)indice->vindice)[pos];
 
     int opcion;
     do
@@ -348,46 +338,45 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
         printf("Opcion: ");
         scanf("%d", &opcion);
         limpiar_buffer();
-        //fflush(stdin);
 
         switch (opcion)
         {
-            case 1:
-            {
-                char nuevoPlan[TAMPLAN];
-                printf("Nuevo plan (BASIC/PREMIUM/VIP/FAMILY): ");
-                LeerTexto(nuevoPlan, TAMPLAN);
-                // Normalizar a mayusculas para validar
-                int k;
-                for (k = 0; nuevoPlan[k]; k++)
-                    nuevoPlan[k] = miToUpper(nuevoPlan[k]);
-                if (validarPlan(nuevoPlan) == EXITO)
-                    strcpy(m->plan, nuevoPlan);
-                else
-                    puts("Plan invalido, no se modifico.");
-                break;
-            }
-            case 2:
-            {
-                char nuevoMail[MAIL];
-                printf("Nuevo email tutor (dejar vacio si no aplica): ");
-                LeerTexto(nuevoMail, MAIL);
-                if (valEmailTut(nuevoMail, &m->fnac, &fProc) == EXITO)
-                    strcpy(m->emailTutor, nuevoMail);
-                else
-                    puts("Email invalido o faltante para menor, no se modifico.");
-                break;
-            }
-            case 3:
-                puts("Cambios guardados en memoria.");
-                break;
-            case 4:
-                puts("Modificacion cancelada.");
-                break;
-            default:
-                puts("Opcion invalida.");
+        case 1:
+        {
+            char nuevoPlan[TAMPLAN];
+            printf("Nuevo plan (BASIC/PREMIUM/VIP/FAMILY): ");
+            LeerTexto(nuevoPlan, TAMPLAN);
+            // Normalizar a mayusculas para validar
+
+            for (char *p = nuevoPlan; *p; p++)
+                *p = miToUpper(*p);
+            if (validarPlan(nuevoPlan) == EXITO)
+                strcpy(m->plan, nuevoPlan);
+            else
+                printf("Plan invalido, no se modifico.");
+            break;
         }
-    } while (opcion != 3 && opcion != 4);
+        case 2:
+        {
+            char nuevoMail[MAIL];
+            printf("Nuevo email tutor (dejar vacio si no aplica): ");
+            LeerTexto(nuevoMail, MAIL);
+            if (valEmailTut(nuevoMail, &m->fnac, &fProc) == EXITO) strcpy(m->emailTutor, nuevoMail);
+            else
+                printf("Email invalido o faltante para menor, no se modifico.");
+            break;
+        }
+        case 3:
+            printf("Cambios guardados en memoria.");
+            break;
+        case 4:
+            printf("Modificacion cancelada.");
+            break;
+        default:
+            printf("Opcion invalida.");
+        }
+    }
+    while (opcion != 3 && opcion != 4);
 
     return (opcion == 3) ? OK : ERROR;
 }
@@ -402,24 +391,21 @@ int ModificarTitulo(t_indice *indice)
     if (scanf("%d", &idModif) != 1)
     {
         limpiar_buffer();
-        //fflush(stdin);
         return ERROR;
     }
-    //fflush(stdin);
     limpiar_buffer();
 
-    t_pelis aux = {0};
+    t_pelis aux= {0};
     aux.idPeli = idModif;
 
-    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual,
-                            sizeof(t_pelis), comparar_id_peli);
+    int pos = indice_buscar(indice, &aux, indice->cantidad_elementos_actual, sizeof(t_pelis), comparar_id_peli);
     if (pos == NO_EXISTE)
     {
         printf("ID %d no encontrado.\n", idModif);
         return ERROR;
     }
 
-    t_pelis *p = &((t_pelis *)indice->vindice)[pos];
+    t_pelis *p = (t_pelis *)indice->vindice + pos;
 
     int opcion;
     do
@@ -432,57 +418,57 @@ int ModificarTitulo(t_indice *indice)
         printf("5. Cancelar\n");
         printf("Opcion: ");
         scanf("%d", &opcion);
-        //fflush(stdin);
         limpiar_buffer();
+
         switch (opcion)
         {
-            case 1:
-            {
-                char nuevoTit[STRING];
-                printf("Nuevo titulo: ");
-                LeerTexto(nuevoTit, STRING);
-                normalizarNomPel(nuevoTit);
-                if (nuevoTit[0] != '\0')
-                    strcpy(p->titulo, nuevoTit);
-                else
-                    puts("Titulo vacio, no se modifico.");
-                break;
-            }
-            case 2:
-            {
-                char nuevoGen[TAM_GENERO];
-                printf("Nuevo genero (Accion/Drama/Comedia/Terror): ");
-                LeerTexto(nuevoGen, TAM_GENERO);
-                normalizarNomPel(nuevoGen);
-                if (validarGenero(nuevoGen) == EXITO)
-                    strcpy(p->genero, nuevoGen);
-                else
-                    puts("Genero invalido, no se modifico.");
-                break;
-            }
-            case 3:
-            {
-                int nuevoStock;
-                printf("Nuevo stock: ");
-                scanf("%d", &nuevoStock);
-                //fflush(stdin);
-                limpiar_buffer();
-                if (validarStock(nuevoStock) == EXITO)
-                    p->stock = nuevoStock;
-                else
-                    puts("Stock invalido, no se modifico.");
-                break;
-            }
-            case 4:
-                puts("Cambios guardados en memoria.");
-                break;
-            case 5:
-                puts("Modificacion cancelada.");
-                break;
-            default:
-                puts("Opcion invalida.");
+        case 1:
+        {
+            char nuevoTit[STRING];
+            printf("Nuevo titulo: ");
+            LeerTexto(nuevoTit, STRING);
+            normalizarNomPel(nuevoTit);
+            if (nuevoTit[0] != '\0')
+                strcpy(p->titulo, nuevoTit);
+            else
+                printf("Titulo vacio, no se modifico.");
+            break;
         }
-    } while (opcion != 4 && opcion != 5);
+        case 2:
+        {
+            char nuevoGen[TAM_GENERO];
+            printf("Nuevo genero (Accion/Drama/Comedia/Terror): ");
+            LeerTexto(nuevoGen, TAM_GENERO);
+            normalizarNomPel(nuevoGen);
+            if (validarGenero(nuevoGen) == EXITO)
+                strcpy(p->genero, nuevoGen);
+            else
+                printf("Genero invalido, no se modifico.");
+            break;
+        }
+        case 3:
+        {
+            int nuevoStock;
+            printf("Nuevo stock: ");
+            scanf("%d", &nuevoStock);
+            limpiar_buffer();
+            if (validarStock(nuevoStock) == EXITO)
+                p->stock = nuevoStock;
+            else
+                printf("Stock invalido, no se modifico.");
+            break;
+        }
+        case 4:
+            printf("Cambios guardados en memoria.");
+            break;
+        case 5:
+            printf("Modificacion cancelada.");
+            break;
+        default:
+            printf("Opcion invalida.");
+        }
+    }
+    while (opcion != 4 && opcion != 5);
 
     return (opcion == 4) ? OK : ERROR;
 }
@@ -630,10 +616,11 @@ void ListadoPorDni(t_indice *indice)
     printf("%-12s %-14s %-30s %-10s %-6s\n",
            "DNI", "CUIL", "Nombre", "Plan", "Estado");
     printf("------------------------------------------------------------\n");
-    for (i = 0; i < (int)indice->cantidad_elementos_actual; i++)
+    t_miembros *p = arr;
+    for (i = 0; i < (int)indice->cantidad_elementos_actual; i++, p++)
     {
         printf("%-12ld %-14s %-30s %-10s %-6c\n",
-               arr[i].dni, arr[i].cuil, arr[i].nya, arr[i].plan, arr[i].estado);
+               p->dni, p->cuil, p->nya, p->plan, p->estado);
     }
     printf("Total: %u miembro/s\n", indice->cantidad_elementos_actual);
 }
@@ -645,7 +632,7 @@ void ListadoPorPlan(t_indice *indice)
 {
     if (indice_vacio(indice) == OK)
     {
-        puts("No hay miembros registrados.");
+        printf("No hay miembros registrados.");
         return;
     }
 
@@ -656,7 +643,7 @@ void ListadoPorPlan(t_indice *indice)
     t_miembros *copia = (t_miembros *)malloc(n * sizeof(t_miembros));
     if (!copia)
     {
-        puts("Error de memoria.");
+        printf("Error de memoria.");
         return;
     }
     memcpy(copia, arr, n * sizeof(t_miembros));
@@ -665,16 +652,15 @@ void ListadoPorPlan(t_indice *indice)
     unsigned i, j;
     for (i = 1; i < n; i++)
     {
-        t_miembros tmp = copia[i];
+        t_miembros tmp = *(copia + i);
         j = i;
-        while (j > 0 && comparar_nya(&copia[j-1], &tmp) > 0)
+        while (j > 0 && comparar_nya(copia + j - 1, &tmp) > 0)
         {
-            copia[j] = copia[j-1];
+            *(copia + j) = *(copia + j - 1);
             j--;
         }
-        copia[j] = tmp;
+        *(copia + j) = tmp;
     }
-
     const char *planes[] = {"BASIC", "PREMIUM", "VIP", "FAMILY"};
     int nPlanes = 4;
 
@@ -701,31 +687,3 @@ void ListadoPorPlan(t_indice *indice)
 
     free(copia);
 }
-
-// ============================================================
-//  AUDITORIA DE ERRORES
-// ============================================================
-void audi_guardar(t_indice *mat, const char *path)
-{
-    FILE *audiarch = fopen(path, "w");
-    if(audiarch == NULL)
-    {
-        puts("ERROR DE MEMORIA");
-        //getc();
-        exit(1);
-    }
-
-    fprintf(audiarch, "Tipo_Error;DNI;Fecha;Email\n");
-    t_auditoria *errores = (t_auditoria*)mat->vindice;
-    for(int i = 0; i < (int)mat->cantidad_elementos_actual; i++)
-    {
-        fprintf(audiarch,"%s;%ld;%02d/%02d/%04d;%s \n",
-                errores[i].tipoError,
-                errores[i].dni,
-                errores[i].fecha.d,
-                errores[i].fecha.m,
-                errores[i].fecha.a,
-                errores[i].email);
-    }
-}
-
