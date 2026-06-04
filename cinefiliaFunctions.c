@@ -310,13 +310,13 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
     }
 
     t_miembros *m = &((t_miembros *)indice->vindice)[pos];
-
+    t_miembros copia = *m;
     int opcion;
     do
     {
-        printf("\n--- Modificando: %s (DNI %ld) ---\n", m->nya, m->dni);
-        printf("1. Modificar Plan        [actual: %s]\n", m->plan);
-        printf("2. Modificar Email Tutor [actual: %s]\n", m->emailTutor);
+        printf("\n--- Modificando: %s (DNI %ld) ---\n", copia.nya, copia.dni);
+        printf("1. Modificar Plan        [actual: %s]\n", copia.plan);
+        printf("2. Modificar Email Tutor [actual: %s]\n", copia.emailTutor);
         printf("3. Guardar cambios\n");
         printf("4. Cancelar\n");
         printf("Opcion: ");
@@ -335,7 +335,7 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
             for (char *p = nuevoPlan; *p; p++)
                 *p = miToUpper(*p);
             if (validarPlan(nuevoPlan) == EXITO)
-                strcpy(m->plan, nuevoPlan);
+                strcpy(copia.plan, nuevoPlan);
             else
                 printf("Plan invalido, no se modifico.");
             break;
@@ -345,12 +345,14 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
             char nuevoMail[MAIL];
             printf("Nuevo email tutor (dejar vacio si no aplica): ");
             LeerTexto(nuevoMail, MAIL);
-            if (valEmailTut(nuevoMail, &m->fnac, &fProc) == EXITO) strcpy(m->emailTutor, nuevoMail);
+            if (valEmailTut(nuevoMail, &copia.fnac, &fProc) == EXITO)
+                strcpy(copia.emailTutor, nuevoMail);
             else
                 printf("Email invalido o faltante para menor, no se modifico.");
             break;
         }
         case 3:
+            *m = copia;
             printf("Cambios guardados en memoria.");
             break;
         case 4:
@@ -362,7 +364,7 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
     }
     while (opcion != 3 && opcion != 4);
 
-    return (opcion == 3) ? EXITO : ERROR;
+    return (opcion == 3 || opcion == 4) ? EXITO : ERROR;
 }
 
 // ============================================================
@@ -390,14 +392,14 @@ int ModificarTitulo(t_indice *indice)
     }
 
     t_pelis *p = (t_pelis *)indice->vindice + pos;
-
+    t_pelis copia = *p;
     int opcion;
     do
     {
-        printf("\n--- Modificando: %s (ID %d) ---\n", p->titulo, p->idPeli);
-        printf("1. Modificar Titulo  [actual: %s]\n", p->titulo);
-        printf("2. Modificar Genero  [actual: %s]\n", p->genero);
-        printf("3. Modificar Stock   [actual: %d]\n", p->stock);
+        printf("\n--- Modificando: %s (ID %d) ---\n", copia.titulo, copia.idPeli);
+        printf("1. Modificar Titulo  [actual: %s]\n", copia.titulo);
+        printf("2. Modificar Genero  [actual: %s]\n", copia.genero);
+        printf("3. Modificar Stock   [actual: %d]\n", copia.stock);
         printf("4. Guardar cambios\n");
         printf("5. Cancelar\n");
         printf("Opcion: ");
@@ -413,7 +415,7 @@ int ModificarTitulo(t_indice *indice)
             LeerTexto(nuevoTit, STRING);
             normalizarNomPel(nuevoTit);
             if (nuevoTit[0] != '\0')
-                strcpy(p->titulo, nuevoTit);
+                strcpy(copia.titulo, nuevoTit);
             else
                 printf("Titulo vacio, no se modifico.");
             break;
@@ -425,7 +427,7 @@ int ModificarTitulo(t_indice *indice)
             LeerTexto(nuevoGen, TAM_GENERO);
             normalizarNomPel(nuevoGen);
             if (validarGenero(nuevoGen) == EXITO)
-                strcpy(p->genero, nuevoGen);
+                strcpy(copia.genero, nuevoGen);
             else
                 printf("Genero invalido, no se modifico.");
             break;
@@ -437,12 +439,13 @@ int ModificarTitulo(t_indice *indice)
             scanf("%d", &nuevoStock);
             limpiar_buffer();
             if (validarStock(nuevoStock) == EXITO)
-                p->stock = nuevoStock;
+                copia.stock = nuevoStock;
             else
                 printf("Stock invalido, no se modifico.");
             break;
         }
         case 4:
+            *p = copia;
             printf("Cambios guardados en memoria.");
             break;
         case 5:
@@ -454,7 +457,7 @@ int ModificarTitulo(t_indice *indice)
     }
     while (opcion != 4 && opcion != 5);
 
-    return (opcion == 4) ? EXITO : ERROR;
+    return (opcion == 4 || opcion == 5) ? EXITO : ERROR;
 }
 
 // ============================================================

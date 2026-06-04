@@ -41,13 +41,12 @@ int main()
         return ERROR;
     }
 
-    // 3. Menu principal (carga CSVs internamente)
     EjecutarMenu(&indMiembros, &indPelis, &indAlquileres,&auditoria, &indErrores,fProc, PATH_MIEMPROS, PATH_TITULOS, PATH_ALQUILERES);
 
-    // 4. Guardar auditoria de operaciones del menu → auditoria.csv
+
     audi_guardar(&auditoria, "auditoria.csv");
 
-    // 5. Guardar errores de carga CSV → errores_carga.csv
+
     errores_guardar(&indErrores, "errores_carga.csv");
 
     // 6. Liberar memoria

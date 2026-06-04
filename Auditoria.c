@@ -1,8 +1,5 @@
 #include "cinefiliaHeader.h"
 
-// ================================================================
-//  Nombres de filas y columnas de la matriz
-// ================================================================
 static const char *nombres_op[]  = {"Alta", "Baja", "Modificacion", "Consulta"};
 static const char *nombres_ent[] = {"Miembros", "Pelis", "Alquileres"};
 
@@ -19,10 +16,6 @@ void audi_registrar(t_auditoria *aud, e_operacion op, e_entidad ent, int resulta
         aud->celdas[op][ent].errores++;
 }
 
-// ================================================================
-//  audi_mostrar
-//  Imprime la matriz por pantalla con formato de tabla.
-// ================================================================
 void audi_mostrar(const t_auditoria *aud)
 {
     printf("\n========== AUDITORIA (matriz operacion x entidad) ==========\n");
@@ -44,11 +37,7 @@ void audi_mostrar(const t_auditoria *aud)
     printf("=============================================================\n");
 }
 
-// ================================================================
-//  audi_guardar
-//  Vuelca la matriz completa a un CSV con encabezado.
-//  Formato: Operacion,Entidad,Exitos,Errores
-// ================================================================
+
 void audi_guardar(const t_auditoria *aud, const char *path)
 {
     FILE *f = fopen(path, "w");
@@ -81,11 +70,7 @@ void audi_guardar(const t_auditoria *aud, const char *path)
     audi_mostrar(aud);
 }
 
-// ================================================================
-//  errores_guardar
-//  Vuelca el indice de errores de carga de CSV a su propio archivo.
-//  Formato: DNI,TipoError,Fecha,EmailTutor
-// ================================================================
+
 void errores_guardar(const t_indice *indErrores, const char *path)
 {
     if (indice_vacio(indErrores) == OK)

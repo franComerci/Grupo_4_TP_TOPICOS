@@ -128,7 +128,7 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis,
 }
 
 // ================================================================
-//  obtenerFechaProceso  -  sin cambios
+//  obtenerFechaProceso
 // ================================================================
 t_fecha obtenerFechaProceso()
 {

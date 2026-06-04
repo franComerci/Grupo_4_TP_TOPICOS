@@ -58,7 +58,7 @@
 #define CANTIDAD_ELEMENTOS    100
 #define INCREMENTO            1.3
 #define OK                    1
-#define ERROR                 0
+#define ERROR                 -3
 #define NO_EXISTE            -1
 #define NO_LLENO             -2
 
