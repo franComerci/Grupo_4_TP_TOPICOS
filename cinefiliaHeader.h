@@ -21,6 +21,7 @@
 #define TAM_TITULO  60
 #define TAM_NOMBRE  60
 #define TAM_TELEFONO 20
+#define TAM_ERROR 20
 
 // Codigos de retorno
 #define EXITO            0
@@ -111,11 +112,13 @@ typedef struct
     int  cantAlquileres;
 } t_alquiler;
 
+
 typedef struct
 {
-    char tipoError[20];
-    int  cantIncidencias;
-    long clave;
+    char tipoError[TAM_ERROR];
+    char email[MAIL];
+    long dni;
+    t_fecha fecha;
 } t_auditoria;
 
 typedef struct
@@ -124,6 +127,8 @@ typedef struct
     unsigned cantidad_elementos_actual;
     unsigned cantidad_elementos_maxima;
 } t_indice;
+
+
 
 /// ----------------------------- PROTOTIPOS ----------------------------------
 
@@ -174,17 +179,15 @@ int  validarStock(int stock);
 /// GESTION DE ARCHIVOS
 void trozado(char *linea, t_miembros *m);
 void trozado_peli(char *linea, t_pelis *p);
-int  procesarMiembro(char *registro, t_miembros *miembro, t_fecha fechaProceso);
+int procesarMiembro(char *registro, t_miembros *miembro, t_indice *indAuditoria, t_fecha fechaProceso);
 int  procesarPelicula(char *registro, t_pelis *peli);
-void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_fecha fProc, const char *pathMiembros, const char *pathPelis);
-void MostrarArchivos(t_indice *indMiembros, t_indice *indPelis);
+void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_indice *indAuditoria, t_fecha fProc, const char *pathMiembros, const char *pathPelis);void MostrarArchivos(t_indice *indMiembros, t_indice *indPelis);
 void guardarDatos(t_indice *miembros, t_indice *titulos, t_indice *alquileres, t_fecha fProc);
 
 /// MENU
 void MostrarMenu();
-void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquileres,
-                  t_fecha fProc, const char *pathMiembros, const char *pathPelis,
-                  const char *pathAlq);
+void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquileres, t_indice *indAuditoria,t_fecha fProc, const char *pathMiembros, const char *pathPelis,const char *pathAlq);
+
 t_fecha obtenerFechaProceso();
 
 /// FUNCIONES DE COMPARACION
@@ -192,6 +195,8 @@ int comparar_dni(const void *dniA, const void *dniB);
 int comparar_id_peli(const void *a, const void *b);
 int comparar_nya(const void *a, const void *b);
 int comparar_alquiler(const void *a, const void *b);
+int comparar_auditoria(const void *a, const void *b);
+
 void limpiar_buffer();
 
 /// OPERACIONES DEL MENU
@@ -207,4 +212,11 @@ int  AlquilarTitulo(t_indice *indMiembros, t_indice *indPelis, t_indice *indAlq)
 void ListadoPorDni(t_indice *indice);
 void ListadoPorPlan(t_indice *indice);
 void AlquilerPeli(t_indice *miembro, t_indice *peli, t_indice *alquileres, const char *NombreArchPelis, t_fecha fProc);
+
+///AUDITORIA DE ERRORES
+//int audi_crear(t_matriz_auditoria *matriz);
+//int audi_insertar(t_matriz_auditoria *mat, t_auditoria nuevo);
+void audi_guardar(t_indice *mat, const char *path);
+
+
 #endif // CINEFILIAHEADER_H_INCLUDED

@@ -38,7 +38,14 @@ int comparar_alquiler(const void *a, const void *b)
     if (x->idPeli > y->idPeli) return  1;
     return 0;
 }
-
+int comparar_auditoria(const void *a, const void *b)
+{
+    const t_auditoria *aud1 = (const t_auditoria*)a;
+    const t_auditoria *aud2 = (const t_auditoria*)b;
+    if(aud1->dni > aud2->dni) return 1;
+    if(aud1->dni < aud2->dni) return -1;
+    return 0;
+}
 // ============================================================
 //  UTILIDADES
 // ============================================================
@@ -694,3 +701,31 @@ void ListadoPorPlan(t_indice *indice)
 
     free(copia);
 }
+
+// ============================================================
+//  AUDITORIA DE ERRORES
+// ============================================================
+void audi_guardar(t_indice *mat, const char *path)
+{
+    FILE *audiarch = fopen(path, "w");
+    if(audiarch == NULL)
+    {
+        puts("ERROR DE MEMORIA");
+        //getc();
+        exit(1);
+    }
+
+    fprintf(audiarch, "Tipo_Error;DNI;Fecha;Email\n");
+    t_auditoria *errores = (t_auditoria*)mat->vindice;
+    for(int i = 0; i < (int)mat->cantidad_elementos_actual; i++)
+    {
+        fprintf(audiarch,"%s;%ld;%02d/%02d/%04d;%s \n",
+                errores[i].tipoError,
+                errores[i].dni,
+                errores[i].fecha.d,
+                errores[i].fecha.m,
+                errores[i].fecha.a,
+                errores[i].email);
+    }
+}
+

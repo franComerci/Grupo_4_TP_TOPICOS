@@ -90,7 +90,7 @@ void trozado_peli(char *linea, t_pelis *p)
     // ID
     p->idPeli = atoi(linea);
 }
-
+/*
 int procesarMiembro(char *registro, t_miembros *miembro, t_fecha fechaProceso)
 {
     trozado(registro, miembro);
@@ -131,7 +131,7 @@ int procesarMiembro(char *registro, t_miembros *miembro, t_fecha fechaProceso)
 
     return EXITO;
 }
-
+*/
 int procesarPelicula(char *registro, t_pelis *peli)
 {
     trozado_peli(registro, peli);
@@ -145,8 +145,105 @@ int procesarPelicula(char *registro, t_pelis *peli)
     return EXITO;
 }
 
+
+int procesarMiembro(char *registro, t_miembros *miembro, t_indice *indAuditoria, t_fecha fechaProceso)
+{
+    trozado(registro, miembro);
+    normalizarNombre(miembro->nya);
+
+    char *cuil = crearCuil(miembro->dni, miembro->sexo);
+    if (cuil != NULL)
+    {
+        strcpy(miembro->cuil, cuil);
+        free(cuil);
+    }
+
+    if (validarDni(miembro->dni)                                                         != EXITO)
+    {
+        t_auditoria error;
+        strcpy(error.tipoError, "DNI");
+        error.dni = miembro->dni;
+        error.fecha = fechaProceso;
+        strcpy(error.email,miembro->emailTutor);
+        indice_insertar(indAuditoria, &error, sizeof(t_auditoria),comparar_auditoria);
+        return ERROR_VALID;
+    }
+    if (validarSexo(miembro->sexo)                                                       != EXITO)
+    {
+        t_auditoria error;
+        strcpy(error.tipoError, "SEXO");
+        error.dni = miembro->dni;
+        error.fecha = fechaProceso;
+        strcpy(error.email,miembro->emailTutor);
+        indice_insertar(indAuditoria, &error, sizeof(t_auditoria),comparar_auditoria);
+        return ERROR_VALID;
+    }
+    if (validarFechaNac(&miembro->fnac, &fechaProceso)                                   != EXITO)
+        {
+            t_auditoria error;
+            strcpy(error.tipoError, "F_NAC");
+            error.dni = miembro->dni;
+            error.fecha = fechaProceso;
+            strcpy(error.email,miembro->emailTutor);
+            indice_insertar(indAuditoria, &error, sizeof(t_auditoria),comparar_auditoria);
+            return ERROR_VALID;
+        }
+    if (validarFechaAfil(&miembro->fechaAfiliacion, &miembro->fnac, &fechaProceso)       != EXITO)
+        {
+            t_auditoria error;
+            strcpy(error.tipoError, "F_AFIL");
+            error.dni = miembro->dni;
+            error.fecha = fechaProceso;
+            strcpy(error.email,miembro->emailTutor);
+            indice_insertar(indAuditoria, &error, sizeof(t_auditoria),comparar_auditoria);
+            return ERROR_VALID;
+        }
+    if (validarUltimaCuota(&miembro->ultimaCuota, &miembro->fechaAfiliacion, &fechaProceso) != EXITO)
+        {
+            t_auditoria error;
+            strcpy(error.tipoError, "U_CUOTA");
+            error.dni = miembro->dni;
+            error.fecha = fechaProceso;
+            strcpy(error.email,miembro->emailTutor);
+            indice_insertar(indAuditoria, &error, sizeof(t_auditoria),comparar_auditoria);
+            return ERROR_VALID;
+        }
+    if (valEmailTut(miembro->emailTutor, &miembro->fnac, &fechaProceso)                  != EXITO)
+        {
+            t_auditoria error;
+            strcpy(error.tipoError, "EMAIL");
+            error.dni = miembro->dni;
+            error.fecha = fechaProceso;
+            strcpy(error.email,miembro->emailTutor);
+            indice_insertar(indAuditoria, &error, sizeof(t_auditoria),comparar_auditoria);
+            return ERROR_VALID;
+        }
+    if(validarPlan(miembro->plan)!= EXITO)
+        {
+            t_auditoria error;
+            strcpy(error.tipoError, "PLAN");
+            error.dni = miembro->dni;
+            error.fecha = fechaProceso;
+            strcpy(error.email,miembro->emailTutor);
+            indice_insertar(indAuditoria, &error, sizeof(t_auditoria),comparar_auditoria);
+            return ERROR_VALID;
+        }
+
+    // Calcular categoria
+    int edad = fechaProceso.a - miembro->fnac.a;
+    if (fechaProceso.m < miembro->fnac.m ||
+            (fechaProceso.m == miembro->fnac.m && fechaProceso.d < miembro->fnac.d))
+        edad--;
+    if (edad < 18)
+        strcpy(miembro->categoria, "MENOR");
+    else
+        strcpy(miembro->categoria, "ADULTO");
+
+    return EXITO;
+}
+
 // Carga los dos CSV en sus respectivos indices
-void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_fecha fProc,const char *pathMiembros, const char *pathPelis)
+void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_indice *indAuditoria, t_fecha fProc,const char *pathMiembros, const char *pathPelis)
 {
     char linea[REG];
     int cargados, errores;
@@ -178,7 +275,7 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_fecha fProc,const 
         {
             t_miembros m = {0};
 
-            if (procesarMiembro(linea, &m, fProc) == EXITO)
+            if (procesarMiembro(linea, &m, indAuditoria, fProc) == EXITO)
             {
                 if (indice_insertar(indMiembros, &m, sizeof(t_miembros), comparar_dni) == OK)
                     cargados++;

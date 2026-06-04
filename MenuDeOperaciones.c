@@ -14,17 +14,17 @@ void MostrarMenu()
     printf("G. Mostrar Informacion de un Miembro\n");
     printf("H. Alquiler de un Titulo\n");
     printf("I. Listado de Miembros Ordenados por DNI\n");
-    printf("J. Listado de Miembros Por Plan\n");
+    printf("J. Listado de Miembros Por Plan (Ordenados por nombre)\n");
     printf("L. Mostrar todos los registros\n");
     printf("K. Salir\n");
     printf("=========================================\n");
     printf("Opcion: ");
 }
 
-void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquileres,t_fecha fProc, const char *pathMiembros, const char *pathPelis,const char *pathAlq)
+void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis, t_indice *alquileres, t_indice *indAuditoria,t_fecha fProc, const char *pathMiembros, const char *pathPelis,const char *pathAlq)
 {
     // Cargar datos desde CSV al inicio
-    cargarDatos(indMiembros, indPelis, fProc, pathMiembros, pathPelis);// SUBE EL CSV A LOS INDICES
+    cargarDatos(indMiembros, indPelis, indAuditoria, fProc, pathMiembros, pathPelis);// SUBE EL CSV A LOS INDICES
 
     char opcion;
     do
