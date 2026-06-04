@@ -210,7 +210,7 @@ void trozado(char *linea, t_miembros *m);
 void trozado_peli(char *linea, t_pelis *p);
 int  procesarMiembro(char *registro, t_miembros *miembro, t_indice *indErrores, t_fecha fechaProceso);
 int  procesarPelicula(char *registro, t_pelis *peli);
-void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_indice *indErrores, t_fecha fProc, const char *pathMiembros, const char *pathPelis);
+void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_indice *indErrores,t_indice *indAlquileres, t_fecha fProc, const char *pathMiembros, const char *pathPelis);
 void MostrarArchivos(t_indice *indMiembros, t_indice *indPelis);
 void guardarDatos(t_indice *miembros, t_indice *titulos, t_indice *alquileres, t_fecha fProc);
 

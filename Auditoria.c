@@ -13,7 +13,7 @@ static const char *nombres_ent[] = {"Miembros", "Pelis", "Alquileres"};
 // ================================================================
 void audi_registrar(t_auditoria *aud, e_operacion op, e_entidad ent, int resultado)
 {
-    if (resultado == OK || resultado == EXITO)
+    if (resultado == EXITO)
         aud->celdas[op][ent].exitos++;
     else
         aud->celdas[op][ent].errores++;
@@ -59,14 +59,14 @@ void audi_guardar(const t_auditoria *aud, const char *path)
     }
 
     // Encabezado
-    fprintf(f, "Operacion,Entidad,Exitos,Errores\n");
+    fprintf(f, "Operacion;Entidad;Exitos;Errores\n");
 
     // Recorre la matriz fila por fila (operacion) y columna por columna (entidad)
     for (int i = 0; i < N_OPERACIONES; i++)
     {
         for (int j = 0; j < N_ENTIDADES; j++)
         {
-            fprintf(f, "%s,%s,%u,%u\n",
+            fprintf(f, "%s;%s;%u;%u\n",
                     nombres_op[i],
                     nombres_ent[j],
                     aud->celdas[i][j].exitos,

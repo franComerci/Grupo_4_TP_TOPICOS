@@ -1,9 +1,5 @@
 #include "cinefiliaHeader.h"
 
-// ================================================================
-//  Funcion auxiliar: llena un t_error_carga y lo inserta en el
-//  indice de errores. Se usa solo dentro de procesarMiembro().
-// ================================================================
 int comparar_error_carga(const void *a, const void *b)
 {
     long dniA = ((const t_error_carga *)a)->dni;
@@ -13,30 +9,17 @@ int comparar_error_carga(const void *a, const void *b)
     return 0;
 }
 
-static void registrar_error_carga(t_indice *indErrores,
-                                   long dni,
-                                   const char *tipo,
-                                   t_fecha fecha,
-                                   const char *email)
+static void registrar_error_carga(t_indice *indErrores, long dni, const char *tipo, t_fecha fecha, const char *email)
 {
     t_error_carga err = {0};
     err.dni   = dni;
     err.fecha = fecha;
-    strncpy(err.tipoError, tipo,  TAM_TIPO_ERROR - 1);
-    strncpy(err.email,     email, MAIL - 1);
-    // Insertamos sin funcion de comparacion de orden estricto;
-    // usamos comparar_error_carga que ordena por DNI
+    strcpy(err.tipoError, tipo);
+    strcpy(err.email, email);
     indice_insertar(indErrores, &err, sizeof(t_error_carga), comparar_error_carga);
 }
 
-// ================================================================
-//  Funcion de comparacion para t_error_carga (ordena por DNI)
-// ================================================================
 
-
-// ================================================================
-//  parsear_fecha
-// ================================================================
 t_fecha parsear_fecha(const char *cad)
 {
     t_fecha f = {0, 0, 0};
@@ -46,10 +29,6 @@ t_fecha parsear_fecha(const char *cad)
     return f;
 }
 
-// ================================================================
-//  trozado  -  Formato CSV miembros:
-//  DNI;NyA;FechaNac;Sexo;FechaAfil;UltCuota;Estado;Plan;EmailTutor
-// ================================================================
 void trozado(char *linea, t_miembros *m)
 {
     char *act = strchr(linea, '\n');
@@ -103,10 +82,6 @@ void trozado(char *linea, t_miembros *m)
     // cuil y categoria se calculan en procesarMiembro()
 }
 
-// ================================================================
-//  trozado_peli  -  Formato CSV peliculas:
-//  IDPelicula;Titulo;Genero;Stock
-// ================================================================
 void trozado_peli(char *linea, t_pelis *p)
 {
     char *act = strchr(linea, '\n');
@@ -133,29 +108,18 @@ void trozado_peli(char *linea, t_pelis *p)
     p->idPeli = atoi(linea);
 }
 
-// ================================================================
-//  procesarMiembro
-//  Parsea, normaliza y valida un registro de miembro leido del CSV.
-//  Los errores se acumulan en indErrores (t_error_carga), NO en
-//  t_auditoria (que es para operaciones del menu, no para la carga).
-//  Retorna EXITO si el registro es valido, ERROR_VALID si no.
-// ================================================================
-int procesarMiembro(char *registro, t_miembros *miembro,
-                    t_indice *indErrores, t_fecha fechaProceso)
+int procesarMiembro(char *registro, t_miembros *miembro, t_indice *indErrores, t_fecha fechaProceso)
 {
+
     trozado(registro, miembro);
     normalizarNombre(miembro->nya);
 
-    // Generar CUIL a partir de DNI y sexo
     char *cuil = crearCuil(miembro->dni, miembro->sexo);
     if (cuil != NULL)
     {
         strcpy(miembro->cuil, cuil);
         free(cuil);
     }
-
-    // --- Validaciones en cascada ---------------------------------
-    //  Cada fallo registra el error en indErrores y retorna.
 
     if (validarDni(miembro->dni) != EXITO)
     {
@@ -203,11 +167,11 @@ int procesarMiembro(char *registro, t_miembros *miembro,
         return ERROR_VALID;
     }
 
-    // --- Calcular categoria segun edad --------------------------
+    // --- Calcular categoria segun edad
     int edad = fechaProceso.a - miembro->fnac.a;
     if (fechaProceso.m < miembro->fnac.m ||
-        (fechaProceso.m == miembro->fnac.m &&
-         fechaProceso.d < miembro->fnac.d))
+            (fechaProceso.m == miembro->fnac.m &&
+             fechaProceso.d < miembro->fnac.d))
         edad--;
 
     strcpy(miembro->categoria, edad < 18 ? "MENOR" : "ADULTO");
@@ -215,9 +179,6 @@ int procesarMiembro(char *registro, t_miembros *miembro,
     return EXITO;
 }
 
-// ================================================================
-//  procesarPelicula
-// ================================================================
 int procesarPelicula(char *registro, t_pelis *peli)
 {
     trozado_peli(registro, peli);
@@ -231,31 +192,35 @@ int procesarPelicula(char *registro, t_pelis *peli)
     return EXITO;
 }
 
-// ================================================================
-//  cargarDatos
-//  Lee los dos CSV y los inserta en sus indices.
-//  Los errores de miembros van a indErrores (t_error_carga).
-//  La t_auditoria NO se toca aqui: es solo para operaciones del menu.
-// ================================================================
-void cargarDatos(t_indice *indMiembros, t_indice *indPelis,
-                 t_indice *indErrores,
-                 t_fecha fProc,
-                 const char *pathMiembros, const char *pathPelis)
+void cargarDatos(t_indice *indMiembros, t_indice *indPelis, t_indice *indErrores,t_indice *indAlquileres, t_fecha fProc, const char *pathMiembros, const char *pathPelis)
 {
+
+    char miembrosDia[100], pelisDia[100];
     char linea[REG];
+
+
+    sprintf(miembrosDia, "miembros_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
+    sprintf(pelisDia, "titulos_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
+
     int cargados, errores;
 
     // --- Miembros ---
-    FILE *fMiembros = fopen(pathMiembros, "r");
-    if (!fMiembros)
+    FILE *fMiembros = fopen(miembrosDia, "r");
+    if (fMiembros)
     {
-        printf("Advertencia: no se pudo abrir '%s'.\n", pathMiembros);
+        printf("Se encontro un archivo con los miembros de este dia: '%s'.\n", miembrosDia);
     }
     else
     {
+        printf("No hay archivo de este dia, se usa el archivo maestro: %s \n", pathMiembros);
+        fMiembros = fopen(pathMiembros, "r");
+    }
+
+    if(fMiembros)
+    {
         cargados = 0;
         errores  = 0;
-        fgets(linea, REG, fMiembros); // saltar header
+        fgets(linea, REG, fMiembros);
 
         while (fgets(linea, REG, fMiembros))
         {
@@ -263,13 +228,13 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis,
 
             if (procesarMiembro(linea, &m, indErrores, fProc) == EXITO)
             {
-                // Rechazar duplicados de DNI
+
                 if (indice_buscar(indMiembros, &m,
                                   indMiembros->cantidad_elementos_actual,
                                   sizeof(t_miembros), comparar_dni) != NO_EXISTE)
                 {
                     registrar_error_carga(indErrores, m.dni,
-                                         "DNI_DUP", fProc, m.emailTutor);
+                                          "DNI_DUP", fProc, m.emailTutor);
                     errores++;
                 }
                 else if (indice_insertar(indMiembros, &m,
@@ -280,7 +245,7 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis,
                 else
                 {
                     registrar_error_carga(indErrores, m.dni,
-                                         "MEM", fProc, m.emailTutor);
+                                          "MEM", fProc, m.emailTutor);
                     errores++;
                 }
             }
@@ -292,16 +257,22 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis,
     }
 
     // --- Peliculas ---
-    FILE *fPelis = fopen(pathPelis, "r");
-    if (!fPelis)
+    FILE *fPelis = fopen(pelisDia, "r");
+    if (fPelis)
     {
-        printf("Advertencia: no se pudo abrir '%s'.\n", pathPelis);
+        printf("Se encontro un archivo con los titulos de este dia: '%s'.\n", pelisDia);
     }
     else
     {
+        printf("No hay archivo de este dia, se usa el archivo maestro: %s \n", pathPelis);
+        fPelis = fopen(pathPelis, "r");
+    }
+
+    if(fPelis)
+    {
         cargados = 0;
         errores  = 0;
-        fgets(linea, REG, fPelis); // saltar header
+        fgets(linea, REG, fPelis);
 
         while (fgets(linea, REG, fPelis))
         {
@@ -320,11 +291,52 @@ void cargarDatos(t_indice *indMiembros, t_indice *indPelis,
         fclose(fPelis);
         printf("Titulos cargados: %d  |  Errores: %d\n", cargados, errores);
     }
+
+    char alquileresDia[100];
+
+    sprintf(alquileresDia, "alquiler_%d_%d_%d.csv", fProc.d, fProc.m, fProc.a);
+
+    // --- Alquileres ---
+    FILE *fAlq = fopen(alquileresDia, "r");
+    if (fAlq)
+    {
+        printf("Se encontro un archivo con los alquileres de este dia: '%s'. Cargando persistencia...\n", alquileresDia);
+
+        cargados = 0;
+        errores  = 0;
+        fgets(linea, REG, fAlq);
+
+        while (fgets(linea, REG, fAlq))
+        {
+            t_alquiler alq = {0};
+
+
+            if (sscanf(linea, "%ld;%d;%d", &alq.dni, &alq.idPeli, &alq.cantAlquileres) == 3)
+            {
+
+                if (indice_insertar(indAlquileres, &alq, sizeof(t_alquiler), comparar_alquiler) == OK)
+                {
+                    cargados++;
+                }
+                else
+                {
+                    errores++;
+                }
+            }
+            else
+            {
+                errores++;
+            }
+        }
+        fclose(fAlq);
+        printf("Alquileres recuperados: %d  |  Errores de lectura: %d\n", cargados, errores);
+    }
+    else
+    {
+        printf("No hay registros de alquileres previos para el dia de hoy (%02d/%02d/%04d).\n", fProc.d, fProc.m, fProc.a);
+    }
 }
 
-// ================================================================
-//  MostrarArchivos  -  sin cambios respecto al original
-// ================================================================
 void MostrarArchivos(t_indice *indMiembros, t_indice *indPelis)
 {
     t_miembros *arrM = (t_miembros *)indMiembros->vindice;
@@ -392,7 +404,7 @@ void guardarDatos(t_indice *miembros, t_indice *titulos, t_indice *alquileres, t
                     (vecM + i)->fechaAfiliacion.d, (vecM + i)->fechaAfiliacion.m, (vecM + i)->fechaAfiliacion.a,
                     (vecM + i)->ultimaCuota.d, (vecM + i)->ultimaCuota.m, (vecM + i)->ultimaCuota.a,
                     (vecM + i)->estado, (vecM + i)->plan, (vecM + i)->emailTutor
-                    );
+                   );
 
         }
         fclose(pfMiembros);
@@ -410,7 +422,7 @@ void guardarDatos(t_indice *miembros, t_indice *titulos, t_indice *alquileres, t
             fprintf(pfTitulos, "%d;%s;%s;%d\n",
                     (vecP + i)->idPeli, (vecP + i)->titulo,
                     (vecP + i)->genero, (vecP + i)->stock
-                    );
+                   );
 
         }
         fclose(pfTitulos);

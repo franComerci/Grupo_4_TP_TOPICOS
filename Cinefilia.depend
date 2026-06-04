@@ -63,10 +63,10 @@
 1780364247 source:c:\users\admin\downloads\cinefilia (1)\cinefilia\validaciones.c
 	"cinefiliaHeader.h"
 
-1780588684 source:c:\users\admin\desktop\cinefilia_tp_topicos\cinefiliafunctions.c
+1780598417 source:c:\users\admin\desktop\cinefilia_tp_topicos\cinefiliafunctions.c
 	"cinefiliaHeader.h"
 
-1780588978 c:\users\admin\desktop\cinefilia_tp_topicos\cinefiliaheader.h
+1780600754 c:\users\admin\desktop\cinefilia_tp_topicos\cinefiliaheader.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -77,24 +77,24 @@
 1780414224 source:c:\users\admin\desktop\cinefilia_tp_topicos\funcionesnormalizar.c
 	"cinefiliaHeader.h"
 
-1780588923 source:c:\users\admin\desktop\cinefilia_tp_topicos\gestionarchivos.c
+1780602316 source:c:\users\admin\desktop\cinefilia_tp_topicos\gestionarchivos.c
 	"cinefiliaHeader.h"
 
-1780415530 source:c:\users\admin\desktop\cinefilia_tp_topicos\indices.c
+1780602490 source:c:\users\admin\desktop\cinefilia_tp_topicos\indices.c
 	"cinefiliaHeader.h"
 
-1780587899 source:c:\users\admin\desktop\cinefilia_tp_topicos\main.c
+1780602526 source:c:\users\admin\desktop\cinefilia_tp_topicos\main.c
 	"cinefiliaHeader.h"
 
-1780588923 source:c:\users\admin\desktop\cinefilia_tp_topicos\menudeoperaciones.c
+1780600754 source:c:\users\admin\desktop\cinefilia_tp_topicos\menudeoperaciones.c
 	"cinefiliaHeader.h"
 
-1780414224 source:c:\users\admin\desktop\cinefilia_tp_topicos\tda_fecha.c
+1780599107 source:c:\users\admin\desktop\cinefilia_tp_topicos\tda_fecha.c
 	"cinefiliaHeader.h"
 
-1780414224 source:c:\users\admin\desktop\cinefilia_tp_topicos\validaciones.c
+1780598965 source:c:\users\admin\desktop\cinefilia_tp_topicos\validaciones.c
 	"cinefiliaHeader.h"
 
-1780586410 source:c:\users\admin\desktop\cinefilia_tp_topicos\auditoria.c
+1780597876 source:c:\users\admin\desktop\cinefilia_tp_topicos\auditoria.c
 	"cinefiliaHeader.h"
 

@@ -60,7 +60,6 @@ void limpiar_buffer()
     int c;
     while ((c = getchar()) != '\n' && c != EOF)
     {
-
     }
 }
 
@@ -116,27 +115,8 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
         printf("Sexo invalido. Operacion cancelada.");
         return ERROR;
     }
-
-    // Fecha de afiliacion
-    printf("Fecha de afiliacion (DD/MM/AAAA): ");
-    scanf(" %d/%d/%d", &aux.fechaAfiliacion.d, &aux.fechaAfiliacion.m, &aux.fechaAfiliacion.a);
-    limpiar_buffer();
-    if (validarFechaAfil(&aux.fechaAfiliacion, &aux.fnac, &fProc) != EXITO)
-    {
-        printf("Fecha de afiliacion invalida. Operacion cancelada.");
-        return ERROR;
-    }
-
-    // Ultima cuota
-    printf("Fecha ultima cuota pagada (DD/MM/AAAA): ");
-    scanf(" %d/%d/%d", &aux.ultimaCuota.d, &aux.ultimaCuota.m, &aux.ultimaCuota.a);
-    limpiar_buffer();
-    if (validarUltimaCuota(&aux.ultimaCuota, &aux.fechaAfiliacion, &fProc) != EXITO)
-    {
-        printf("Fecha de ultima cuota invalida. Operacion cancelada.");
-        return ERROR;
-    }
-
+    aux.fechaAfiliacion = fProc;
+    aux.ultimaCuota = fProc;
     // Estado inicial = 'A'
     aux.estado = 'A';
 
@@ -206,7 +186,6 @@ int AltaMiembros(t_indice *indice, t_fecha fProc)
 int AltaTitulo(t_indice *indice)
 {
     t_pelis aux = {0};
-    //memset(&aux, 0, sizeof(t_pelis));
     int i;
 
     // ID autoincremental
@@ -279,7 +258,7 @@ int BajaMiembros(t_indice *indice, long dniBorrar)
     p->estado = 'B';
     indice_eliminar(indice, &aux, sizeof(t_miembros), comparar_dni);
     printf("Miembro %ld dado de baja correctamente.\n", dniBorrar);
-    return OK;
+    return EXITO;
 }
 
 // ============================================================
@@ -298,8 +277,13 @@ int BajaTitulo(t_indice *indice, int idBorrar)
     }
 
     indice_eliminar(indice, &aux, sizeof(t_pelis), comparar_id_peli);
+
+    t_pelis *vec = (t_pelis *)indice->vindice;
+    for(int i = pos; i < (int)indice->cantidad_elementos_actual; i++)
+        (vec + i)->idPeli--;
+
     printf("Titulo con ID %d dado de baja correctamente.\n", idBorrar);
-    return OK;
+    return EXITO;
 }
 
 // ============================================================
@@ -378,7 +362,7 @@ int ModificarMiembro(t_indice *indice, t_fecha fProc)
     }
     while (opcion != 3 && opcion != 4);
 
-    return (opcion == 3) ? OK : ERROR;
+    return (opcion == 3) ? EXITO : ERROR;
 }
 
 // ============================================================
@@ -470,7 +454,7 @@ int ModificarTitulo(t_indice *indice)
     }
     while (opcion != 4 && opcion != 5);
 
-    return (opcion == 4) ? OK : ERROR;
+    return (opcion == 4) ? EXITO : ERROR;
 }
 
 // ============================================================
@@ -526,12 +510,11 @@ void AlquilerPeli(t_indice *miembro, t_indice *peli, t_indice *alquileres, const
     t_miembros auxMiembros = {0};
     t_pelis auxPelis = {0};
 
-
     printf("Ingresar DNI del miembro: ");
     scanf("%ld", &auxMiembros.dni);
     printf("Ingresar ID del titulo: ");
     scanf("%d", &auxPelis.idPeli);
-    //fflush(stdin);
+
     limpiar_buffer();
 
     int posMiembro = indice_buscar(miembro,&auxMiembros, miembro->cantidad_elementos_actual, sizeof(t_miembros), comparar_dni);

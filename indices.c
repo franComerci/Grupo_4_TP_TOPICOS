@@ -125,6 +125,7 @@ int indice_lleno(const t_indice *indice)
 
 void indice_vaciar(t_indice* indice)
 {
+    free(indice->vindice);
     indice->cantidad_elementos_actual = 0; //???????????? no s� si hay que hacer un free ac�
 }
 

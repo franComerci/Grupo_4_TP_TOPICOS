@@ -93,6 +93,7 @@ int validarFechaAfil(t_fecha *fAfil, t_fecha *fNac, t_fecha *fProc)
         return FECHA_INVALIDA;
     int difNac     = diferenciaEntreFechas(fNac,  fAfil); // afil >= fnac
     int difProceso = diferenciaEntreFechas(fAfil, fProc); // afil <= fproc
+
     return (difNac >= 0 && difProceso >= 0) ? EXITO : FECHA_AFIL_MAL;
 }
 

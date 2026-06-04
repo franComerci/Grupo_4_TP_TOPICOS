@@ -34,7 +34,7 @@ void EjecutarMenu(t_indice *indMiembros, t_indice *indPelis,
                   const char *pathAlq)
 {
     // Carga los CSV; los errores van al indice indErrores
-    cargarDatos(indMiembros, indPelis, indErrores, fProc,
+    cargarDatos(indMiembros, indPelis, indErrores, alquileres, fProc,
                 pathMiembros, pathPelis);
 
     char opcion;

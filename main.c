@@ -51,10 +51,10 @@ int main()
     errores_guardar(&indErrores, "errores_carga.csv");
 
     // 6. Liberar memoria
-    free(indMiembros.vindice);
-    free(indPelis.vindice);
-    free(indAlquileres.vindice);
-    free(indErrores.vindice);
+    indice_vaciar(&indMiembros);
+    indice_vaciar(&indPelis);
+    indice_vaciar(&indAlquileres);
+    indice_vaciar(&indErrores);
 
     return 0;
 }

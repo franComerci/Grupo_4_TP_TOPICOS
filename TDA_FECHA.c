@@ -54,11 +54,6 @@ t_fecha sumarDiasAFecha(const t_fecha *f, int dias)
     return f2;
 }
 
-void mostrarFecha(const t_fecha *f)
-{
-    printf("%02d / %02d / %4d", f->d, f->m, f->a);
-}
-
 int compararFecha(const t_fecha *f1, const t_fecha *f2)
 {
     return (f1->a == f2->a && f1->d == f2->d && f1->m == f2->m);
@@ -110,9 +105,4 @@ int diferenciaEntreFechas(t_fecha *f1, t_fecha *f2)
     return cantDias;
 }
 
-int diaDeLaSemana(t_fecha *f)
-{
-    t_fecha referencia = {7, 1, 1990}; // Fue domingo
-    return diferenciaEntreFechas(&referencia, f) % 7; // Domingo = 0, Lunes = 1, etc.
-}
 
