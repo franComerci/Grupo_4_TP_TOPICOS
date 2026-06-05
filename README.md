@@ -8,6 +8,7 @@ Este repositorio contiene el desarrollo del Trabajo Práctico para la materia **
 2. Lautaro Garcia, DNI: 45919169
 3. Ignacio de Castro, DNI: 45.238.778
 4. Maximiliano Dominguez, DNI: 43535046
+5. Iago Fuster, DNI: 46201515
 
 
 ## 🚀 Seguimiento de Funcionalidades
