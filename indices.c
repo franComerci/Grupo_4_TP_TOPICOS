@@ -40,7 +40,7 @@ int indice_insertar (t_indice *indice, const void *registro, size_t tamanyo, int
             return ERROR_MEMORIA; //significa que el realloc no funciono
     }
 
-    char *base = (char *)indice->vindice; //lo paso a char para que la multiplicacion sea m�s f�cil y se pueda saltar de uno en uno
+    char *base = (char *)indice->vindice; //lo paso a char para que la multiplicacion sea mas facil y se pueda saltar de uno en uno
 
     int i = indice->cantidad_elementos_actual - 1;
 
@@ -149,7 +149,7 @@ int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tam
 
             if(resul < 0)
             {
-                //significa que si lo meto al final est� desordenado entonces tengo que llamar a insertar para que quede ordenado
+                //significa que si lo meto al final esta desordenado entonces tengo que llamar a insertar para que quede ordenado
                 indice_insertar(indice, vreg_ind, tamanyo, cmp);
                 regProcesado = 1;
 
