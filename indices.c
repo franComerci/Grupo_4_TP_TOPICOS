@@ -126,12 +126,12 @@ int indice_lleno(const t_indice *indice)
 void indice_vaciar(t_indice* indice)
 {
     free(indice->vindice);
-    indice->cantidad_elementos_actual = 0; //???????????? no s� si hay que hacer un free ac�
+    indice->cantidad_elementos_actual = 0; 
 }
 
 int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
-    //abro el archivo en modolectura
+    //abro el archivo en modo lectura
     FILE *arch = fopen(path, "r");
     if(arch == NULL)
         return ERROR;
