@@ -24,14 +24,14 @@ Para llevar el trackeo del proyecto entre los 7 miembros del equipo, utilizamos 
 |   05 | Validador de Email (Estructura y Tutor)     | 🟢 Hecho     |             | Punto 3            |
 |   06 | Carga de Datos: Miembros (CSV)              | 🟢 Hecho     |             | Entrada            |
 |   07 | Carga de Datos: Títulos (CSV)               | 🟢 Hecho     |             | Entrada            |
-|   08 | Sistema de Auditoría de Errores             | 🔴 Por hacer |             | Reporte Errores    |
+|   08 | Sistema de Auditoría de Errores             | 🟢 Hecho     |             | Reporte Errores    |
 |   09 | Menú Principal e Interfaz de Consola        | 🟢 Hecho     |             | Interfaz           |
 |   10 | ABM Miembros (Alta, Baja, Modif.)           | 🟢 Hecho     |             | Funcionalidad      |
 |   11 | ABM Títulos (Alta, Baja, Modif.)            | 🟢 Hecho     |             | Funcionalidad      |
 |   12 | Lógica de Alquileres (Reglas de Plan)       | 🟢 Hecho     |             | Negocio            |
 |   13 | Listado A: Socios Activos por DNI           | 🟢 Hecho     |             | Reporte            |
 |   14 | Listado B: Socios por Plan (Matriz)         | 🟢 Hecho     |             | Reporte            |
-|   15 | Persistencia: Guardado en Archivos Binarios | 🔴 Por hacer |             | Cierre             |
+|   15 | Persistencia: Guardado en Archivos Binarios | 🟢 Hecho     |             | Cierre             |
 
 ---
 
