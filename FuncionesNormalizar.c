@@ -102,7 +102,7 @@ char *normalizarNombre(char *nya)
             write++;
             read++;
         }
-        while(*read != '\0' && !esLetra(*read)) //no le doy bola a la basura ni a los espacios
+        while(*read != '\0' && !esLetra(*read)) //saco la basura y los espacios
             read++;
 
         if(*read != '\0')
@@ -154,7 +154,7 @@ char *normalizarNomPel(char *gen_o_tit)
             write++;
             read++;
         }
-        while(*read != '\0' && !esLetra(*read)) //no le doy bola a la basura ni a los espacios
+        while(*read != '\0' && !esLetra(*read)) //saco la basura y los espacios
             read++;
 
         if(*read != '\0')
