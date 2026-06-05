@@ -170,7 +170,7 @@ int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tam
                    fclose(arch);
                    return ERROR;
                }
-               base = (char *)indice->vindice; ///agregado por gemini
+               base = (char *)indice->vindice; 
             }
         }
         void *destino = base + (indice->cantidad_elementos_actual * tamanyo);
