@@ -89,7 +89,6 @@ int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int 
 int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
     int inicio = 0, fin = (int)nmemb - 1;
-    //int fin = indice->cantidad_elementos_actual - 1; no lo necesito porque tengo nmemb como parametro
     char *base = (char*)indice->vindice; //tengo que pasarlo a char pq es void
     while(inicio <= fin)
     {
